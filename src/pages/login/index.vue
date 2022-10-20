@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-19 20:58:33
+ * @LastEditTime: 2022-10-20 20:56:20
 -->
 <template>
   <view class="login">
@@ -15,6 +15,7 @@
           class="login_form_phone_input"
           v-model="form.phone"
           placeholder="请输入手机号"
+          ref="formPhone"
         ></uni-easyinput>
       </view>
       <view class="login_form_captcha" v-if="currentStatus == 'register'">
@@ -37,6 +38,7 @@
       <view class="login_form_password">
         <text class="login_form_phone_text">密码：</text>
         <uni-easyinput
+          ref="formPassword"
           class="login_form_phone_input"
           v-model="form.password"
           placeholder="请输入密码"
@@ -94,6 +96,85 @@ var checkResult = {
     this.errTip(dom, errMsg);
   },
 };
+
+var strategies = {
+  minLength: function (errMsg, length) {
+    if (this.value.length < length) {
+      checkResult.no(this, errMsg);
+      return errMsg;
+    } else {
+      checkResult.ok(this);
+    }
+  },
+  isNumber: function (errMsg) {
+    if (!/\d+/.test(this.value)) {
+      checkResult.no(this, errMsg);
+      return errMsg;
+    } else {
+      checkResult.ok(this);
+    }
+  },
+  require: function (errMsg) {
+    if (this.value == "") {
+      checkResult.no(this, errMsg);
+      return errMsg;
+    } else {
+      checkResult.ok(this);
+    }
+  },
+  isMobile: function (errMsg) {
+    if (!/(^1[3|5|8][0-9]{9}$)/.test(this.value)) {
+      checkResult.no(this, errMsg);
+      return errMsg;
+    } else {
+      checkResult.ok(this);
+    }
+  },
+};
+
+function Validator() {
+  this.items = [];
+}
+
+Validator.prototype = {
+  constructor: Validator,
+  add: function (dom, rules) {
+    for (let i = 0, len = rule.length; i < len; i++) {
+      var strategy = rule[i].strategy;
+      var errMsg = rule[i].errMsg;
+
+      if (strategy.indexOf("minLength") !== -1) {
+        var temp = strategy.split(":");
+        var minLen = temp[1];
+        strategy = temp[0];
+      }
+      this.items.push(strategies[strategy].bind(dom, errMsg, minLen));
+    }
+  },
+  start: function () {
+    for (var i = 0; i < this.items.length; i++) {
+      var ret = this.items[i]();
+      if (ret) {
+        console.log("开始校验");
+      }
+    }
+  },
+};
+
+var validate = new Validator();
+validate.add(this.$refs["formPassword"], [
+  {
+    strategy: "required",
+    errMsg: "密码不能为空",
+  },
+]);
+validate.add(this.$refs["formPhone"], [
+  {
+    strategy: "isNumber",
+    errMsg: "请输入正确的手机号",
+  },
+]);
+
 export default {
   data() {
     return {
@@ -131,7 +212,9 @@ export default {
         this.isCaptchaCorrect = false;
       }
     },
-    async register() {},
+    async register() {
+      validate.start();
+    },
   },
 };
 </script>
