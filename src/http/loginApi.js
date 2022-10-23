@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-19 20:25:12
+ * @LastEditTime: 2022-10-23 10:51:35
  */
 import { fetch } from "@/http/fetch";
 
@@ -19,7 +19,7 @@ export const login = (params) =>
 //注册
 export const register = (params) =>
   fetch(
-    `/register/cellphone?phone=${params.phone}&passward=${params.passward}&captcha=${captcha}&nickName=${nickName}`,
+    `/register/cellphone?phone=${params.phone}&passward=${params.passward}&captcha=${params.captcha}`,
     params,
     "GET"
   );

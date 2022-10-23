@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-22 17:31:57
+ * @LastEditTime: 2022-10-23 11:31:24
 -->
 <template>
   <view class="login">
@@ -41,15 +41,15 @@
           class="login_form_phone_input"
           v-model="form.password"
           placeholder="请输入密码"
+          type="password"
         ></uni-easyinput>
         <span></span>
       </view>
       <view
         class="login_form_register"
-        v-if="currentStatus == 'login'"
-        @click="currentStatus = 'register'"
+        @click="currentStatus = currentStatus == 'login' ? 'register' : 'login'"
       >
-        <text>注册</text>
+        <text>{{ currentStatus == "login" ? "注册" : "登录" }}</text>
       </view>
       <button
         class="login_form_button"
@@ -78,8 +78,8 @@ export default {
       currentStatus: "login",
       isCaptchaCorrect: true,
       form: {
-        phone: "",
-        password: "",
+        phone: "18825482506",
+        password: "123456",
         captcha: "",
       },
     };
@@ -90,10 +90,6 @@ export default {
     validate() {
       var validate = new Validator();
       validate.add(this.form.phone, [
-        // {
-        //   strategy: "isNumber",
-        //   errMsg: "只能为数字",
-        // },
         {
           strategy: "isMobile",
           errMsg: "请输入正确的手机号",
@@ -104,10 +100,10 @@ export default {
           strategy: "require",
           errMsg: "密码不能为空",
         },
-        // {
-        //   strategy: "minLength:6",
-        //   errMsg: "密码至少六位",
-        // },
+        {
+          strategy: "minLength:6",
+          errMsg: "密码至少六位",
+        },
       ]);
 
       let errMsg = validate.start();
@@ -115,17 +111,46 @@ export default {
         icon: "error",
         title: errMsg,
       });
+      return errMsg;
     },
     async login() {
-      let params = {
-        phone: this.form.phone,
-        password: md5(this.form.password),
-      };
-      const res = await this.$api.$loginApi.login(params);
-      console.log(res, 11);
+      let errMsg = this.validate();
+      if (!errMsg) {
+        let params = {
+          phone: this.form.phone,
+          password: md5(this.form.password),
+        };
+        const res = await this.$api.$loginApi.login(params);
+        if (res.code == 502) {
+          uni.showToast({
+            icon: "error",
+            title: res.msg,
+          });
+        }
+        if (res.code == 200) {
+          uni.setStorage({
+            key: "account",
+            data: res.account,
+          });
+          uni.setStorage({
+            key: "bindings",
+            data: res.bindings,
+          });
+          uni.setStorage({
+            key: "profile",
+            data: res.profile,
+          });
+        }
+      }
     },
     async sendCaptcha() {
       const res = await this.$api.$loginApi.sendCaptcha(this.form.phone);
+      if (res.code == 400) {
+        uni.showToast({
+          icon: "error",
+          title: "请输入正确的手机号",
+        });
+      }
     },
     async verifyCaptcha() {
       let params = {
@@ -138,7 +163,18 @@ export default {
       }
     },
     async register() {
-      this.validate();
+      let errMsg = this.validate();
+      if (!errMsg) {
+        let params = {
+          phone: this.form.phone,
+          password: md5(this.form.password),
+          captcha: this.form.captcha,
+        };
+        const res = await this.$api.$loginApi.register(params);
+        if (res.code == 200) {
+          this.currentStatus = "login";
+        }
+      }
     },
   },
 };
@@ -146,48 +182,49 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  width: 100%;
-  height: 100%;
+  display: flex;
+  justify-content: center;
   &_form {
-    margin-top: 100px;
-    height: 170px;
+    width: 100%;
+    padding: 50rpx;
+    margin-top: 200rpx;
     &_phone,
     &_password,
     &_captcha {
       display: flex;
       justify-content: center;
       &_text {
-        width: 70px;
+        width: 140rpx;
         display: flex;
         justify-content: flex-end;
       }
     }
     &_phone {
-      margin-bottom: 20px;
+      margin-bottom: 40rpx;
     }
     &_password {
-      margin-top: 20px;
+      margin-top: 40rpx;
     }
     &_register {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 10px;
+      margin: 20rpx 0;
       color: rgb(90, 90, 249);
     }
     &_captcha {
       &_button {
-        font-size: 12px;
-        border-radius: 20px;
+        font-size: 24rpx;
+        border-radius: 40rpx;
       }
       &_tip {
-        margin-left: 68px;
+        margin-left: 136rpx;
         color: red;
       }
     }
     &_button {
-      margin-top: 20px;
+      margin-top: 40rpx;
       background-color: #f76c6c;
-      border-radius: 20px;
+      border-radius: 40rpx;
     }
   }
 }

@@ -1,33 +1,7 @@
-let checkResult = {
-  ok: function () {
-    return true;
-  },
-  no: function (errMsg) {
-    uni.showToast({
-      icon: "error",
-      title: errMsg,
-    });
-    return false;
-  },
-};
-
 let strategies = {
-  // minLength: function (errMsg, length) {
-  //   if (this.value.length < length) {
-  //     checkResult.no(errMsg);
-  //     return errMsg;
-  //   } else {
-  //     checkResult.ok();
-  //   }
-  // },
-  // isNumber: function (errMsg) {
-  //   if (!/\d+/.test(this.value)) {
-  //     checkResult.no(errMsg);
-  //     return errMsg;
-  //   } else {
-  //     checkResult.ok();
-  //   }
-  // },
+  minLength: function (value, length, errMsg) {
+    return value.length < length ? errMsg : "";
+  },
   require: function (value, errMsg) {
     return value == "" ? errMsg : "";
   },
