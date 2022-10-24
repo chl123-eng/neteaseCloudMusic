@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-23 11:31:24
+ * @LastEditTime: 2022-10-24 23:00:09
 -->
 <template>
   <view class="login">
@@ -140,6 +140,9 @@ export default {
             key: "profile",
             data: res.profile,
           });
+          this.$store.commit("login/SET_ACCOUNT", res.account);
+          this.$store.commit("login/SET_BINDINGS", res.bindings);
+          this.$store.commit("login/SET_PROFILE", res.profile);
         }
       }
     },
