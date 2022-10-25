@@ -3,8 +3,8 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
- * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-24 23:00:09
+ * @LastEditors: chl
+ * @LastEditTime: 2022-10-25 10:17:49
 -->
 <template>
   <view class="login">
@@ -89,6 +89,7 @@ export default {
     //策略模式-表单验证
     validate() {
       var validate = new Validator();
+
       validate.add(this.form.phone, [
         {
           strategy: "isMobile",
@@ -117,7 +118,7 @@ export default {
       let errMsg = this.validate();
       if (!errMsg) {
         let params = {
-          phone: this.form.phone,
+          phone: this.form.phonqqe,
           password: md5(this.form.password),
         };
         const res = await this.$api.$loginApi.login(params);

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: chl
+ * @Date: 2022-10-21 09:38:08
+ * @LastEditors: chl
+ * @LastEditTime: 2022-10-25 10:14:12
+ */
 import { requestConstData } from "@/const/index";
 
 const errCodeWhiteList = [];
@@ -25,7 +33,7 @@ uni.addInterceptor("request", {
     // request 触发前拼接 url
     args.url = requestConstData.BASE_URL + args.url;
   },
-  success(args) {},
+  success() {},
   fail(err) {
     handleError(err);
   },
@@ -49,7 +57,9 @@ const handleError = (errObj) => {
       break;
     default:
       if (~errCodeWhiteList.indexOf(errObj.statusCode))
-        return Promise(reslove(errObj));
+        return new Promise((resolve) => {
+          resolve(errObj);
+        });
       else {
         uni.showToast({
           icon: "error",

@@ -4,9 +4,9 @@
  * @Author: chl
  * @Date: 2022-10-17 15:10:46
  * @LastEditors: chl
- * @LastEditTime: 2022-10-17 16:54:56
+ * @LastEditTime: 2022-10-25 10:12:54
  */
-import Vue from "vue";
+
 import * as $loginApi from "./loginApi";
 
 let apiObj = {
