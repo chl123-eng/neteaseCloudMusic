@@ -3,8 +3,8 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
- * @LastEditors: chl
- * @LastEditTime: 2022-10-25 10:17:49
+ * @LastEditors: 谢树宏 384180258@qq.com
+ * @LastEditTime: 2022-10-29 17:37:38
 -->
 <template>
   <view class="login">
@@ -118,7 +118,7 @@ export default {
       let errMsg = this.validate();
       if (!errMsg) {
         let params = {
-          phone: this.form.phonqqe,
+          phone: this.form.phone,
           password: md5(this.form.password),
         };
         const res = await this.$api.$loginApi.login(params);

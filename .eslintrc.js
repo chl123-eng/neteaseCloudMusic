@@ -3,8 +3,8 @@
  * @version:
  * @Author: chl
  * @Date: 2022-10-25 09:52:14
- * @LastEditors: chl
- * @LastEditTime: 2022-10-25 10:08:07
+ * @LastEditors: 谢树宏 384180258@qq.com
+ * @LastEditTime: 2022-10-29 17:03:40
  */
 module.exports = {
   root: true,
@@ -32,5 +32,6 @@ module.exports = {
         ignores: ["index"], //需要忽略的组件名
       },
     ],
+    "linebreak-style": [0, "error", "windows"],
   },
 };

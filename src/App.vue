@@ -1,13 +1,15 @@
 <script>
 export default {
   onLaunch: function () {
-    console.log("App Launch");
-  },
-  onShow: function () {
-    console.log("App Show");
-  },
-  onHide: function () {
-    console.log("App Hide");
+    if (
+      uni.getStorageSync("account") &&
+      uni.getStorageSync("bindings") &&
+      uni.getStorageSync("profile")
+    ) {
+      this.$store.commit("login/SET_ACCOUNT", uni.getStorageSync("account"));
+      this.$store.commit("login/SET_BINDINGS", uni.getStorageSync("bindings"));
+      this.$store.commit("login/SET_PROFILE", uni.getStorageSync("profile"));
+    }
   },
 };
 </script>
