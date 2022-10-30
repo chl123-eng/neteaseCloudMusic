@@ -11,6 +11,15 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		},
+		{
+			"path": "pages/home/index"
+		},
+		{
+			"path": "pages/interest/index"
+		},
+		{
+			"path": "pages/personalInfo/index"
 		}
 	],
 	"globalStyle": {
@@ -20,23 +29,24 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
+		"selectedColor": "#d81e06",
 		"list": [
 			{
 				"pagePath": "pages/home/index",
-				"iconPath": "assets/img/tabbar/faxian.png",
-				"selectedIconPath": "assets/img/tabbar/active-faxian.png",
+				"iconPath": "static/img/tabbar/faxian.png",
+				"selectedIconPath": "static/img/tabbar/active-faxian.png",
 				"text": "发现"
 			},
 			{
 				"pagePath": "pages/interest/index",
-				"iconPath": "assets/img/tabbar/guanzhu.png",
-				"selectedIconPath": "assets/img/tabbar/active-guanzhu.png",
+				"iconPath": "static/img/tabbar/guanzhu.png",
+				"selectedIconPath": "static/img/tabbar/active-guanzhu.png",
 				"text": "关注"
 			},
 			{
 				"pagePath": "pages/personalInfo/index",
-				"iconPath": "assets/img/tabbar/yinle.png",
-				"selectedIconPath": "assets/img/tabbar/active-yinle.png",
+				"iconPath": "static/img/tabbar/yinle.png",
+				"selectedIconPath": "static/img/tabbar/active-yinle.png",
 				"text": "我的"
 			}
 		]

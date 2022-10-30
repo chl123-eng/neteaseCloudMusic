@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-29 17:37:38
+ * @LastEditTime: 2022-10-30 12:17:57
 -->
 <template>
   <view class="login">
@@ -144,6 +144,9 @@ export default {
           this.$store.commit("login/SET_ACCOUNT", res.account);
           this.$store.commit("login/SET_BINDINGS", res.bindings);
           this.$store.commit("login/SET_PROFILE", res.profile);
+          uni.switchTab({
+            url: "/pages/home/index",
+          });
         }
       }
     },
