@@ -3,8 +3,8 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
- * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-30 12:17:57
+ * @LastEditors: chl
+ * @LastEditTime: 2022-11-03 17:22:58
 -->
 <template>
   <view class="login">
@@ -72,6 +72,7 @@
 <script>
 const md5 = require("js-md5");
 import { Validator } from "@/utils/validate";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -85,6 +86,13 @@ export default {
     };
   },
   onLoad() {},
+  computed: {
+    ...mapMutations([
+      "login/SET_ACCOUNT",
+      "login/SET_BINDINGS",
+      "login/SET_PROFILE",
+    ]),
+  },
   methods: {
     //策略模式-表单验证
     validate() {
@@ -141,9 +149,9 @@ export default {
             key: "profile",
             data: res.profile,
           });
-          this.$store.commit("login/SET_ACCOUNT", res.account);
-          this.$store.commit("login/SET_BINDINGS", res.bindings);
-          this.$store.commit("login/SET_PROFILE", res.profile);
+          this["login/SET_ACCOUNT"](res.account);
+          this["login/SET_BINDINGS"](res.bindings);
+          this["login/SET_PROFILE"](res.profile);
           uni.switchTab({
             url: "/pages/home/index",
           });
