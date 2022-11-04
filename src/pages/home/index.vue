@@ -1,18 +1,30 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: chl
+ * @Date: 2022-11-03 16:09:42
+ * @LastEditors: chl
+ * @LastEditTime: 2022-11-04 16:27:09
+-->
 <template>
-  <div class="content">
-    <div class="content_searchBox">
-      <input class="content_searchBox_input" v-model="data.searchStr" />
-    </div>
-  </div>
+  <view class="content">
+    <view class="content_searchBox">
+      <uni-search-bar radius="100" bgColor="#fff" v-model="searchStr" />
+    </view>
+    <view class="content_swiper">
+      <swiper></swiper>
+    </view>
+  </view>
 </template>
-<script lang="ts">
+<script>
+import swiper from "./swiper.vue";
 export default {
-  setup() {
-    const data = {
-      searchStr: "",
-    };
+  components: {
+    swiper,
+  },
+  data() {
     return {
-      data,
+      searchStr: "",
     };
   },
 };
@@ -21,16 +33,6 @@ export default {
 .content {
   width: 100%;
   height: 100%;
-  background: rgb(252, 250, 250);
-  padding: 32rpx;
-  &_searchBox {
-    margin-bottom: 30rpx;
-    &_input {
-      border-radius: 60rpx;
-      height: 70rpx;
-      line-height: 70rpx;
-      background: #fff;
-    }
-  }
+  background: rgb(235, 234, 234);
 }
 </style>

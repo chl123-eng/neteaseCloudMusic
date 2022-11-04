@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: chl
- * @LastEditTime: 2022-11-03 17:22:58
+ * @LastEditTime: 2022-11-04 14:08:58
 -->
 <template>
   <view class="login">
@@ -86,14 +86,10 @@ export default {
     };
   },
   onLoad() {},
-  computed: {
-    ...mapMutations([
-      "login/SET_ACCOUNT",
-      "login/SET_BINDINGS",
-      "login/SET_PROFILE",
-    ]),
-  },
   methods: {
+    ...mapMutations({ SET_ACCOUNT: "login/SET_ACCOUNT" }),
+    ...mapMutations({ SET_BINDINGS: "login/SET_BINDINGS" }),
+    ...mapMutations({ SET_PROFILE: "login/SET_PROFILE" }),
     //策略模式-表单验证
     validate() {
       var validate = new Validator();
@@ -149,9 +145,9 @@ export default {
             key: "profile",
             data: res.profile,
           });
-          this["login/SET_ACCOUNT"](res.account);
-          this["login/SET_BINDINGS"](res.bindings);
-          this["login/SET_PROFILE"](res.profile);
+          this.SET_ACCOUNT(res.account);
+          this.SET_BINDINGS(res.bindings);
+          this.SET_PROFILE(res.profile);
           uni.switchTab({
             url: "/pages/home/index",
           });
@@ -209,7 +205,7 @@ export default {
       display: flex;
       justify-content: center;
       &_text {
-        width: 140rpx;
+        width: 160rpx;
         display: flex;
         justify-content: flex-end;
       }
