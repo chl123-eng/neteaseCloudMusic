@@ -3,19 +3,19 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-11-04 15:22:17
- * @LastEditors: chl
- * @LastEditTime: 2022-11-04 16:30:15
+ * @LastEditors: 谢树宏 384180258@qq.com
+ * @LastEditTime: 2022-11-05 18:29:21
 -->
 <template>
-  <div class="banner">
-    <swiper class="swiper-box">
-      <swiper-item v-for="(item, index) in bannerData" :key="index">
-        <view class="swiper-item" :class="'swiper-item' + index">
+  <view class="banner">
+    <view class="swiper-box">
+      <swiper autoplay circular>
+        <swiper-item v-for="(item, index) in bannerData" :key="index">
           <image :src="item.pic"></image>
-        </view>
-      </swiper-item>
-    </swiper>
-  </div>
+        </swiper-item>
+      </swiper>
+    </view>
+  </view>
 </template>
 <script>
 export default {
@@ -35,8 +35,16 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+image {
+  height: 100%;
+  width: 100%;
+}
+</style>
 <style lang="scss" scoped>
 .swiper-box {
   margin: 0 32rpx;
+  border-radius: 20rpx;
+  overflow: hidden;
 }
 </style>

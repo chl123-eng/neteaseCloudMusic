@@ -3,8 +3,8 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-11-03 16:09:42
- * @LastEditors: chl
- * @LastEditTime: 2022-11-04 16:27:09
+ * @LastEditors: 谢树宏 384180258@qq.com
+ * @LastEditTime: 2022-11-05 17:51:56
 -->
 <template>
   <view class="content">
@@ -12,15 +12,18 @@
       <uni-search-bar radius="100" bgColor="#fff" v-model="searchStr" />
     </view>
     <view class="content_swiper">
-      <swiper></swiper>
+      <my-swiper></my-swiper>
     </view>
+    <view class="content_audioPlayer"> <my-audio></my-audio> </view>
   </view>
 </template>
 <script>
-import swiper from "./swiper.vue";
+import mySwiper from "./mySwiper.vue";
+import myAudio from "./myAudio.vue";
 export default {
   components: {
-    swiper,
+    mySwiper,
+    myAudio,
   },
   data() {
     return {
