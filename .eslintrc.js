@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-25 09:52:14
  * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-10-29 17:03:40
+ * @LastEditTime: 2022-11-06 10:53:02
  */
 module.exports = {
   root: true,
@@ -26,12 +26,7 @@ module.exports = {
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "vue/multi-word-component-names": [
-      "error",
-      {
-        ignores: ["index"], //需要忽略的组件名
-      },
-    ],
+    "vue/multi-word-component-names": "off",
     "linebreak-style": [0, "error", "windows"],
   },
 };
