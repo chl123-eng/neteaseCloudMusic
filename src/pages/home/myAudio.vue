@@ -7,7 +7,7 @@
     </view>
     <view class="audio_mid">
       <text class="audio_mid_name">because of you(因为你)</text>
-      <text class="audio_mid_author">-&nbsp;王菲</text>
+      <text class="audio_mid_author">-&nbsp;王菲王菲</text>
     </view>
     <view class="audio_playBtn">
       <hl-icon :icon="iconName" customClass="iconClass" size="50rpx"></hl-icon>
