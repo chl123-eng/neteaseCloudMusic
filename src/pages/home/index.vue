@@ -1,41 +1,56 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Author: chl
- * @Date: 2022-11-03 16:09:42
- * @LastEditors: 谢树宏 384180258@qq.com
- * @LastEditTime: 2022-11-05 17:51:56
--->
 <template>
-  <view class="content">
-    <view class="content_searchBox">
-      <uni-search-bar radius="100" bgColor="#fff" v-model="searchStr" />
+  <view>
+    <view class="content">
+      <personal v-if="activeTab == 'personal'"></personal>
+      <interest v-else-if="activeTab == 'interest'"></interest>
+      <find v-else></find>
     </view>
-    <view class="content_swiper">
-      <my-swiper></my-swiper>
+    <view class="content_audio">
+      <my-audio></my-audio>
     </view>
-    <view class="content_audioPlayer"> <my-audio></my-audio> </view>
+    <view class="content_navigation">
+      <navigation @changeTab="getTabValue"></navigation>
+    </view>
   </view>
 </template>
 <script>
-import mySwiper from "./mySwiper.vue";
-import myAudio from "./myAudio.vue";
+import navigation from "@/components/navigation/index.vue";
+import find from "../find/index.vue";
+import interest from "../interest/index.vue";
+import personal from "../personal/index.vue";
+import myAudio from "@/components/myAudio/index.vue";
 export default {
   components: {
-    mySwiper,
+    navigation,
+    find,
+    interest,
+    personal,
     myAudio,
   },
   data() {
     return {
-      searchStr: "",
+      activeTab: "find",
     };
+  },
+  methods: {
+    getTabValue(val) {
+      this.activeTab = val;
+      console.log(this.activeTab, this.activeTab == "find");
+    },
   },
 };
 </script>
 <style lang="scss">
 .content {
-  width: 100%;
-  height: 100%;
-  background: rgb(235, 234, 234);
+  position: relative;
+  &_audio {
+    border-top: 1px solid #eee;
+    position: absolute;
+    bottom: 106rpx;
+  }
+  &_navigation {
+    position: absolute;
+    bottom: 0;
+  }
 }
 </style>

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
- * @LastEditors: chl
- * @LastEditTime: 2022-11-04 14:08:58
+ * @LastEditors: chl123-eng 1326090238@qq.com
+ * @LastEditTime: 2022-11-07 17:15:12
 -->
 <template>
   <view class="login">
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-const md5 = require("js-md5");
+import md5 from "js-md5";
 import { Validator } from "@/utils/validate";
 import { mapMutations } from "vuex";
 export default {
@@ -148,7 +148,7 @@ export default {
           this.SET_ACCOUNT(res.account);
           this.SET_BINDINGS(res.bindings);
           this.SET_PROFILE(res.profile);
-          uni.switchTab({
+          uni.navigateTo({
             url: "/pages/home/index",
           });
         }

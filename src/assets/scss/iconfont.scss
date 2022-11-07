@@ -1,10 +1,10 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3752633 */
-  src: url("//at.alicdn.com/t/c/font_3752633_rawtsjtxdea.woff2?t=1667706896153")
+  src: url("//at.alicdn.com/t/c/font_3752633_ntfjq8e4g98.woff2?t=1667727161317")
       format("woff2"),
-    url("//at.alicdn.com/t/c/font_3752633_rawtsjtxdea.woff?t=1667706896153")
+    url("//at.alicdn.com/t/c/font_3752633_ntfjq8e4g98.woff?t=1667727161317")
       format("woff"),
-    url("//at.alicdn.com/t/c/font_3752633_rawtsjtxdea.ttf?t=1667706896153")
+    url("//at.alicdn.com/t/c/font_3752633_ntfjq8e4g98.ttf?t=1667727161317")
       format("truetype");
 }
 
@@ -14,6 +14,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yinle:before {
+  content: "\e625";
+}
+
+.icon-guanzhu:before {
+  content: "\e6cf";
+}
+
+.icon-faxian:before {
+  content: "\e66c";
 }
 
 .icon-yinleliebiao-:before {

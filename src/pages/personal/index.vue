@@ -1,3 +1,3 @@
 <template>
-  <div>33</div>
+  <view>33</view>
 </template>
