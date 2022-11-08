@@ -1,14 +1,14 @@
 <template>
-  <view>
-    <view class="content">
+  <view class="container">
+    <view class="container_content">
       <personal v-if="activeTab == 'personal'"></personal>
       <interest v-else-if="activeTab == 'interest'"></interest>
       <find v-else></find>
     </view>
-    <view class="content_audio">
+    <view class="container_audio">
       <my-audio></my-audio>
     </view>
-    <view class="content_navigation">
+    <view class="container_navigation">
       <navigation @changeTab="getTabValue"></navigation>
     </view>
   </view>
@@ -41,16 +41,25 @@ export default {
 };
 </script>
 <style lang="scss">
-.content {
-  position: relative;
+.container {
+  display: flex;
+  height: calc(100vh);
+  flex-direction: column;
+  &_content {
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+  }
   &_audio {
+    width: 100%;
+    height: 140rpx;
     border-top: 1px solid #eee;
-    position: absolute;
     bottom: 106rpx;
   }
   &_navigation {
-    position: absolute;
-    bottom: 0;
+    width: 100%;
+    height: 106rpx;
+    bottom: 0rpx;
   }
 }
 </style>

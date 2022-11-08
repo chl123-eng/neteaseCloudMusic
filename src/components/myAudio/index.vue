@@ -9,8 +9,12 @@
       <text class="audio_mid_name">because of you(因为你)</text>
       <text class="audio_mid_author">-&nbsp;王菲王菲</text>
     </view>
-    <view class="audio_playBtn">
-      <hl-icon :icon="iconName" customClass="iconClass" size="50rpx"></hl-icon>
+    <view class="audio_playBtn" @click="changePlayBtn">
+      <hl-icon
+        :icon="!isPlay ? 'icon-bofang' : 'icon-zanting'"
+        customClass="iconClass"
+        size="50rpx"
+      ></hl-icon>
     </view>
     <view class="audio_list">
       <hl-icon icon="icon-yinleliebiao-"></hl-icon>
@@ -21,8 +25,13 @@
 export default {
   data() {
     return {
-      iconName: "icon-bofang",
+      isPlay: false,
     };
+  },
+  methods: {
+    changePlayBtn() {
+      this.isPlay = !this.isPlay;
+    },
   },
 };
 </script>
