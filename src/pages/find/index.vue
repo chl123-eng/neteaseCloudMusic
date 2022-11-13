@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-11-03 16:09:42
  * @LastEditors: chl123-eng 1326090238@qq.com
- * @LastEditTime: 2022-11-08 17:04:00
+ * @LastEditTime: 2022-11-13 10:39:37
 -->
 <template>
   <view class="content">
@@ -32,8 +32,10 @@ export default {
   data() {
     return {
       searchStr: "",
+      recommendMusic: {},
     };
   },
+  methods: {},
 };
 </script>
 <style lang="scss">

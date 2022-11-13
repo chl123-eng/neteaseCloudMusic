@@ -12,9 +12,13 @@
         class="container_content_item"
         v-for="(item, index) in recommendList"
         :key="index"
+        @click="getMusicList(item)"
       >
         <view class="container_content_item_img">
-          <img :src="item.picUrl" alt="" />
+          <img
+            src="https://p1.music.126.net/MGt7rHDEm5EBI_TJnWIJAw==/3264450026283951.jpg"
+            alt=""
+          />
         </view>
 
         <view class="container_content_item_text"> {{ item.name }}</view>
@@ -27,6 +31,7 @@ export default {
   data() {
     return {
       recommendList: [],
+      musicList: [],
     };
   },
   methods: {
@@ -36,19 +41,15 @@ export default {
         this.recommendList = res.result;
       }
     },
-    async getPlayList() {
-      const res = await this.$api.$homeApi.playList("2042205655");
-      console.log(res);
-    },
-    async getSongUrl() {
-      const res = await this.$api.$homeApi.getSongUrl("1888168180");
-      console.log(res);
+    async getMusicList(item) {
+      let params = item.id;
+      const res = await this.$api.$homeApi.playList(params);
+      this.musicList = res.playlist.tracks;
+      this.$store.state.recommendList.musicList = this.musicList;
     },
   },
   mounted() {
     this.getRecommendList();
-    this.getPlayList();
-    this.getSongUrl();
   },
 };
 </script>

@@ -16,7 +16,7 @@
         size="50rpx"
       ></hl-icon>
     </view>
-    <view class="audio_list">
+    <view class="audio_list" @click="clickMusicList">
       <hl-icon icon="icon-yinleliebiao-"></hl-icon>
     </view>
   </view>
@@ -26,11 +26,16 @@ export default {
   data() {
     return {
       isPlay: false,
+      openMusicList: false,
     };
   },
   methods: {
     changePlayBtn() {
       this.isPlay = !this.isPlay;
+    },
+    clickMusicList() {
+      this.openMusicList = !this.openMusicList;
+      this.$store.state.recommendList.openMusicList = true;
     },
   },
 };

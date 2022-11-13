@@ -11,6 +11,9 @@
     <view class="container_navigation">
       <navigation @changeTab="getTabValue"></navigation>
     </view>
+    <view class="container_musicPlayPopup">
+      <musicList-popup></musicList-popup>
+    </view>
   </view>
 </template>
 <script>
@@ -19,6 +22,7 @@ import find from "../find/index.vue";
 import interest from "../interest/index.vue";
 import personal from "../personal/index.vue";
 import myAudio from "@/components/myAudio/index.vue";
+import musicListPopup from "@/components/musicListPopup/index.vue";
 export default {
   components: {
     navigation,
@@ -26,6 +30,7 @@ export default {
     interest,
     personal,
     myAudio,
+    musicListPopup,
   },
   data() {
     return {
@@ -35,7 +40,6 @@ export default {
   methods: {
     getTabValue(val) {
       this.activeTab = val;
-      console.log(this.activeTab, this.activeTab == "find");
     },
   },
 };
