@@ -3,6 +3,7 @@
     :class="[`iconfont ${icon}`, customClass]"
     :style="{
       fontSize: size,
+      color: color,
     }"
   ></i>
 </template>
@@ -20,6 +21,10 @@ export default {
     size: {
       type: String,
       default: "50rpx",
+    },
+    color: {
+      type: String,
+      default: "#000",
     },
   },
 };

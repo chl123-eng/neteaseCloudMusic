@@ -3,7 +3,10 @@
     <view v-for="(item, index) in tabs" :key="index" @click="changeTab(item)">
       <view class="nav_item" :class="{ nav_active: item.isActive }">
         <view class="nav_item_icon">
-          <hl-icon :icon="item.iconName"></hl-icon>
+          <hl-icon
+            :icon="item.iconName"
+            :color="item.isActive ? 'rgb(238, 104, 104)' : ''"
+          ></hl-icon>
         </view>
         <view class="nav_item_text">
           <text>{{ item.itemName }}</text>
