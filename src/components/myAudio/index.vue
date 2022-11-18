@@ -1,13 +1,11 @@
 <template>
   <view class="audio">
     <view class="audio_img">
-      <img
-        src="http://p1.music.126.net/3CiwBcXtsK-uQddowrgWCA==/109951168030415320.jpg"
-      />
+      <img :src="currentSong.al.picUrl" />
     </view>
     <view class="audio_mid">
-      <text class="audio_mid_name">because of you(因为你)</text>
-      <text class="audio_mid_author">-&nbsp;王菲王菲</text>
+      <text class="audio_mid_name">{{ currentSong.name }}</text>
+      <text class="audio_mid_author">-&nbsp;{{ currentSong.ar[0].name }}</text>
     </view>
     <view class="audio_playBtn" @click="changePlayBtn">
       <hl-icon
@@ -27,15 +25,39 @@ export default {
     return {
       isPlay: false,
       openMusicList: false,
+      currentSongUrl: {},
+      currentSong: {},
     };
+  },
+  watch: {
+    "$store.state.hlAudio.currentMusic"(val) {
+      this.currentSong = val;
+      this.getSongInfo(val.id);
+    },
   },
   methods: {
     changePlayBtn() {
       this.isPlay = !this.isPlay;
+      const innerAudioContext = uni.createInnerAudioContext();
+      innerAudioContext.src =
+        "http://m7.music.126.net/20221118171405/b08f08e85598773bcebcb0089d2f2135/ymusic/065c/0208/520f/162c67a9935b136a0a4beef6f159bc8d.mp3";
+      innerAudioContext.onPlay();
+      // if (this.isPlay) {
+      //   this.$store.state.hlAudio.innerAudioContext.onPlay();
+      // } else {
+      //   this.$store.state.hlAudio.innerAudioContext.onPause();
+      // }
     },
     clickMusicList() {
       this.openMusicList = !this.openMusicList;
       this.$store.state.recommendList.openMusicList = true;
+    },
+    async getSongInfo(id) {
+      const res = await this.$api.$homeApi.getSongUrl(id);
+      if (res.code == 200) {
+        this.currentSongUrl = res.data[0].url;
+        this.$store.state.hlAudio.currentSongUrl = res.data[0].url;
+      }
     },
   },
 };
@@ -63,6 +85,10 @@ export default {
     white-space: noWrap;
     &_name {
       margin: 0 10rpx 0 20rpx;
+    }
+    &_author {
+      font-size: 24rpx;
+      color: rgb(114, 114, 114);
     }
   }
   &_playBtn {

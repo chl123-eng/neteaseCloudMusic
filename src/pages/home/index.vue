@@ -37,6 +37,16 @@ export default {
       activeTab: "find",
     };
   },
+  watch: {
+    "$store.state.hlAudio.currentMusic"(val) {
+      if (val) {
+        this.$store.state.hlAudio.innerAudioContext =
+          this.$store.getters["hlAudio/innerAudioContext"];
+        this.$store.state.hlAudio.innerAudioContext.src =
+          this.$store.state.hlAudio.currentSongUrl;
+      }
+    },
+  },
   methods: {
     getTabValue(val) {
       this.activeTab = val;

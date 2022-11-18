@@ -19,14 +19,29 @@
           class="container_musics_music"
           v-for="(item, index) in musicList"
           :key="index"
+          @click="selectOneSong(item)"
         >
           <view class="container_musics_music_left">
-            <view class="container_musics_music_left_title">{{
-              item.name
-            }}</view>
-            <view class="container_musics_music_left_singer"
-              >-{{ item.ar[0].name }}</view
+            <hl-icon
+              icon="icon-yinfuhao"
+              size="50rpx"
+              color="red"
+              v-if="item.isPlay"
+            ></hl-icon>
+            <view
+              class="container_musics_music_left_content"
+              :class="{ container_musics_music_left_active: item.isPlay }"
             >
+              <text class="container_musics_music_left_title">{{
+                item.name
+              }}</text>
+              <text class="container_musics_music_left_singer"
+                >-{{ item.ar[0].name }}</text
+              >
+            </view>
+          </view>
+          <view class="container_musics_music_right">
+            <view>X</view>
           </view>
         </view>
       </view>
@@ -51,14 +66,25 @@ export default {
     "$store.state.recommendList.musicList"(val) {
       if (val.length > 0) {
         this.musicList = val;
-        console.log(this.musicList);
+        this.musicList.forEach((i) => {
+          i.isPlay = false;
+        });
+        this.$store.state.hlAudio.currentMusic = val[0];
       }
+    },
+    "$store.state.hlAudio.currentMusic"(val) {
+      this.musicList.forEach((i) => {
+        i.isPlay = i.id == val.id;
+      });
     },
   },
   methods: {
     open() {
       this.$refs.popup.open("bottom");
       this.$store.state.recommendList.openMusicList = false;
+    },
+    selectOneSong(item) {
+      this.$store.state.hlAudio.currentMusic = item;
     },
   },
   mounted() {},
@@ -105,16 +131,25 @@ export default {
         display: flex;
         justify-content: space-between;
         &_left {
-          width: 70%;
           display: flex;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: noWrap;
-          &_singer {
-            margin-top: 9rpx;
-            font-size: 24rpx;
-            color: rgb(114, 114, 114);
+          width: 70%;
+          &_active {
+            color: red;
           }
+          &_content {
+            width: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: noWrap;
+            &_singer {
+              margin-top: 9rpx;
+              font-size: 24rpx;
+              color: rgb(114, 114, 114);
+            }
+          }
+        }
+        &_right {
+          color: rgb(201, 201, 201);
         }
       }
     }
