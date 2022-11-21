@@ -31,6 +31,11 @@ export default {
   },
   watch: {
     "$store.state.hlAudio.currentMusic"(val) {
+      this.$store.state.hlAudio.changeMusic++;
+      if (this.$store.state.hlAudio.changeMusic == 1) {
+        this.$store.state.hlAudio.innerAudioContext =
+          this.$store.getters["hlAudio/innerAudioContext"];
+      }
       this.currentSong = val;
       this.getSongInfo(val.id);
     },
@@ -38,15 +43,11 @@ export default {
   methods: {
     changePlayBtn() {
       this.isPlay = !this.isPlay;
-      const innerAudioContext = uni.createInnerAudioContext();
-      innerAudioContext.src =
-        "http://m7.music.126.net/20221118171405/b08f08e85598773bcebcb0089d2f2135/ymusic/065c/0208/520f/162c67a9935b136a0a4beef6f159bc8d.mp3";
-      innerAudioContext.onPlay();
-      // if (this.isPlay) {
-      //   this.$store.state.hlAudio.innerAudioContext.onPlay();
-      // } else {
-      //   this.$store.state.hlAudio.innerAudioContext.onPause();
-      // }
+      if (this.isPlay) {
+        this.$store.state.hlAudio.innerAudioContext.play();
+      } else {
+        this.$store.state.hlAudio.innerAudioContext.pause();
+      }
     },
     clickMusicList() {
       this.openMusicList = !this.openMusicList;
@@ -57,6 +58,10 @@ export default {
       if (res.code == 200) {
         this.currentSongUrl = res.data[0].url;
         this.$store.state.hlAudio.currentSongUrl = res.data[0].url;
+        this.$store.state.hlAudio.innerAudioContext.src =
+          this.$store.state.hlAudio.currentSongUrl;
+        this.$store.state.hlAudio.innerAudioContext.play();
+        this.isPlay = true;
       }
     },
   },

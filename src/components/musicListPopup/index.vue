@@ -76,6 +76,7 @@ export default {
       this.musicList.forEach((i) => {
         i.isPlay = i.id == val.id;
       });
+      this.$forceUpdate();
     },
   },
   methods: {
