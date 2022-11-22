@@ -2,7 +2,9 @@ const state = {
   innerAudioContext: null,
   currentMusic: null,
   currentSongUrl: null,
-  changeMusic: 0,
+  playSeq: 1,
+  musicList: [],
+  currentIndex: 0,
 };
 
 const getters = {

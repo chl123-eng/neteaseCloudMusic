@@ -36,9 +36,11 @@ export default {
 };
 </script>
 <style lang="scss">
-image {
-  height: 100%;
-  width: 100%;
+.swiper-box {
+  image {
+    height: 100%;
+    width: 100%;
+  }
 }
 </style>
 <style lang="scss" scoped>

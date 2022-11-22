@@ -3,10 +3,10 @@
     <view class="container">
       <view class="container_title">
         <text class="container_title_info">当前播放</text>
-        <text class="container_title_num">{{ `()` }}</text>
+        <text class="container_title_num">{{ `(${musicList.length})` }}</text>
       </view>
       <view class="container_btns">
-        <view class="container_btns_left">
+        <view class="container_btns_left" @click="changePlaySeq">
           <hl-icon :icon="iconName" size="40rpx" color="#666"></hl-icon>
           <text class="container_btns_left_info">{{ playMethods }}</text>
         </view>
@@ -19,7 +19,7 @@
           class="container_musics_music"
           v-for="(item, index) in musicList"
           :key="index"
-          @click="selectOneSong(item)"
+          @click="selectOneSong(item, index)"
         >
           <view class="container_musics_music_left">
             <hl-icon
@@ -55,6 +55,7 @@ export default {
       musicList: [],
       iconName: "icon-liebiaoxunhuan",
       playMethods: "列表播放",
+      playSeq: 1,
     };
   },
   watch: {
@@ -63,13 +64,15 @@ export default {
         this.open();
       }
     },
-    "$store.state.recommendList.musicList"(val) {
+    "$store.state.hlAudio.musicList"(val) {
       if (val.length > 0) {
         this.musicList = val;
         this.musicList.forEach((i) => {
           i.isPlay = false;
         });
+        console.log("音乐列表变化了");
         this.$store.state.hlAudio.currentMusic = val[0];
+        this.$store.state.hlAudio.currentIndex = 0;
       }
     },
     "$store.state.hlAudio.currentMusic"(val) {
@@ -84,8 +87,28 @@ export default {
       this.$refs.popup.open("bottom");
       this.$store.state.recommendList.openMusicList = false;
     },
-    selectOneSong(item) {
+    selectOneSong(item, index) {
       this.$store.state.hlAudio.currentMusic = item;
+      this.$store.state.hlAudio.currentIndex = index;
+    },
+    changePlaySeq() {
+      this.playSeq++;
+      if (this.playSeq == 4) {
+        this.playSeq = 1;
+      }
+      this.playMethods =
+        this.playSeq == 1
+          ? "列表播放"
+          : this.playSeq == 2
+          ? "单曲播放"
+          : "随机播放";
+      this.iconName =
+        this.playSeq == 1
+          ? "icon-liebiaoxunhuan"
+          : this.playSeq == 2
+          ? "icon-danquxunhuan"
+          : "icon-suijibofang";
+      this.$store.state.hlAudio.playSeq = this.playSeq;
     },
   },
   mounted() {},

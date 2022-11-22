@@ -1,6 +1,6 @@
 <template>
   <view class="audio">
-    <view class="audio_img">
+    <view class="audio_img" :class="{ musicPic: isPlay }">
       <img :src="currentSong.al.picUrl" />
     </view>
     <view class="audio_mid">
@@ -27,20 +27,26 @@ export default {
       openMusicList: false,
       currentSongUrl: {},
       currentSong: {},
+      currentIndex: 0,
     };
   },
   watch: {
     "$store.state.hlAudio.currentMusic"(val) {
-      this.$store.state.hlAudio.changeMusic++;
-      if (this.$store.state.hlAudio.changeMusic == 1) {
-        this.$store.state.hlAudio.innerAudioContext =
-          this.$store.getters["hlAudio/innerAudioContext"];
-      }
       this.currentSong = val;
       this.getSongInfo(val.id);
     },
+    "this.$store.state.hlAudio.currentIndex"(val) {
+      this.currentIndex = val;
+    },
   },
   methods: {
+    InfiAudio() {
+      this.$store.state.hlAudio.innerAudioContext =
+        this.$store.getters["hlAudio/innerAudioContext"];
+
+      this.currentSong = this.$store.state.hlAudio.currentMusic;
+      this.getSongInfo(this.$store.state.hlAudio.currentMusic.id);
+    },
     changePlayBtn() {
       this.isPlay = !this.isPlay;
       if (this.isPlay) {
@@ -53,7 +59,38 @@ export default {
       this.openMusicList = !this.openMusicList;
       this.$store.state.recommendList.openMusicList = true;
     },
+    inOrderSongPlay() {
+      this.currentIndex =
+        this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
+          ? 0
+          : this.currentIndex + 1;
+      this.$store.state.hlAudio.currentMusic =
+        this.$store.state.hlAudio.musicList[this.currentIndex];
+    },
+    randomSongPlay() {
+      this.currentIndex =
+        this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
+          ? 0
+          : Math.floor(Math.random() * 20);
+      this.$store.state.hlAudio.currentMusic =
+        this.$store.state.hlAudio.musicList[this.currentIndex];
+    },
+    AudioContextOnEnded() {
+      this.$store.state.hlAudio.innerAudioContext.onEnded(() => {
+        console.log("播放结束");
+        this.$store.state.hlAudio.innerAudioContext.destroy();
+        if (this.$store.state.hlAudio.playSeq == 2) {
+          this.getSongInfo();
+        } else if (this.$store.state.hlAudio.playSeq == 1) {
+          this.inOrderSongPlay();
+        } else {
+          this.randomSongPlay();
+        }
+      });
+    },
     async getSongInfo(id) {
+      this.$store.state.hlAudio.innerAudioContext =
+        this.$store.getters["hlAudio/innerAudioContext"];
       const res = await this.$api.$homeApi.getSongUrl(id);
       if (res.code == 200) {
         this.currentSongUrl = res.data[0].url;
@@ -61,13 +98,33 @@ export default {
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
         this.$store.state.hlAudio.innerAudioContext.play();
+        console.log(111);
         this.isPlay = true;
+        this.$forceUpdate();
       }
     },
+  },
+  mounted() {
+    this.InfiAudio();
+    this.AudioContextOnEnded();
   },
 };
 </script>
 <style lang="scss">
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .musicPic {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
 .audio {
   width: 100%;
   height: 100rpx;

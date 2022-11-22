@@ -5,7 +5,7 @@
       <interest v-else-if="activeTab == 'interest'"></interest>
       <find v-else></find>
     </view>
-    <view class="container_audio">
+    <view class="container_audio" v-if="currentMusic">
       <my-audio></my-audio>
     </view>
     <view class="container_navigation">
@@ -35,7 +35,15 @@ export default {
   data() {
     return {
       activeTab: "find",
+      currentMusic: null,
     };
+  },
+  watch: {
+    "$store.state.hlAudio.currentMusic"(val) {
+      if (val) {
+        this.currentMusic = val;
+      }
+    },
   },
   methods: {
     getTabValue(val) {

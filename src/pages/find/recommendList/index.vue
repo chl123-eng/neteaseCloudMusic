@@ -15,10 +15,7 @@
         @click="getMusicList(item)"
       >
         <view class="container_content_item_img">
-          <img
-            src="https://p1.music.126.net/MGt7rHDEm5EBI_TJnWIJAw==/3264450026283951.jpg"
-            alt=""
-          />
+          <img :src="item.picUrl" alt="" />
         </view>
 
         <view class="container_content_item_text"> {{ item.name }}</view>
@@ -45,7 +42,7 @@ export default {
       let params = item.id;
       const res = await this.$api.$homeApi.playList(params);
       this.musicList = res.playlist.tracks;
-      this.$store.state.recommendList.musicList = this.musicList;
+      this.$store.state.hlAudio.musicList = this.musicList;
     },
   },
   mounted() {
@@ -77,6 +74,10 @@ export default {
       &_img {
         width: 200rpx;
         height: 200rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
         img {
           width: 100%;
           height: 100%;
