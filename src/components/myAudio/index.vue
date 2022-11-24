@@ -36,7 +36,7 @@ export default {
       this.currentSong = val;
       this.getSongInfo(val.id);
     },
-    "this.$store.state.hlAudio.currentIndex"(val) {
+    "$store.state.hlAudio.currentIndex"(val) {
       this.currentIndex = val;
     },
   },
@@ -63,7 +63,7 @@ export default {
     //列表播放
     inOrderSongPlay() {
       this.currentIndex =
-        this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
+        this.currentIndex + 1 == this.$store.state.hlAudio.musicList.length
           ? 0
           : this.currentIndex + 1;
       this.$store.state.hlAudio.currentMusic =
@@ -72,7 +72,7 @@ export default {
     //随机播放
     randomSongPlay() {
       this.currentIndex =
-        this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
+        this.currentIndex + 1 == this.$store.state.hlAudio.musicList.length
           ? 0
           : Math.floor(Math.random() * 20);
       this.$store.state.hlAudio.currentMusic =
@@ -81,43 +81,31 @@ export default {
     //监听音乐结束
     AudioContextOnEnded() {
       this.$store.state.hlAudio.innerAudioContext.onEnded(() => {
-        console.log("播放结束");
-        // this.$store.state.hlAudio.innerAudioContext.destroy();
-
+        console.log("一曲播放结束");
         this.num++;
-        console.log(this.num, "跳转次数");
         if (this.num == 1) {
           if (this.$store.state.hlAudio.playSeq == 2) {
-            this.getSongInfo();
+            this.$store.state.hlAudio.innerAudioContext.play();
           } else if (this.$store.state.hlAudio.playSeq == 1) {
-            console.log(11);
             this.inOrderSongPlay();
           } else {
             this.randomSongPlay();
           }
-        } else {
-          this.num = 0;
         }
       });
     },
     async getSongInfo(id) {
-      // this.$store.state.hlAudio.innerAudioContext =
-      //   this.$store.getters["hlAudio/innerAudioContext"];
       const res = await this.$api.$homeApi.getSongUrl(id);
       if (res.code == 200) {
         this.currentSongUrl = res.data[0].url;
-        console.log(this.$store.state.hlAudio.currentMusic.name, "歌名");
         this.$store.state.hlAudio.currentSongUrl = res.data[0].url;
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
-        console.log(res.data[0]);
-        this.$store.state.hlAudio.innerAudioContext.startTime =
-          (res.data[0].time - 10000) / 1000;
-
         this.$store.state.hlAudio.innerAudioContext.play();
         this.AudioContextOnEnded();
         this.isPlay = true;
         this.$forceUpdate();
+        this.num = 0;
       }
     },
   },
