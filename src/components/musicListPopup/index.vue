@@ -70,7 +70,6 @@ export default {
         this.musicList.forEach((i) => {
           i.isPlay = false;
         });
-        console.log("音乐列表变化了");
         this.$store.state.hlAudio.currentMusic = val[0];
         this.$store.state.hlAudio.currentIndex = 0;
       }

@@ -28,6 +28,7 @@ export default {
       currentSongUrl: {},
       currentSong: {},
       currentIndex: 0,
+      num: 0, //跳转次数
     };
   },
   watch: {
@@ -40,7 +41,7 @@ export default {
     },
   },
   methods: {
-    InfiAudio() {
+    InitAudio() {
       this.$store.state.hlAudio.innerAudioContext =
         this.$store.getters["hlAudio/innerAudioContext"];
 
@@ -59,6 +60,7 @@ export default {
       this.openMusicList = !this.openMusicList;
       this.$store.state.recommendList.openMusicList = true;
     },
+    //列表播放
     inOrderSongPlay() {
       this.currentIndex =
         this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
@@ -67,6 +69,7 @@ export default {
       this.$store.state.hlAudio.currentMusic =
         this.$store.state.hlAudio.musicList[this.currentIndex];
     },
+    //随机播放
     randomSongPlay() {
       this.currentIndex =
         this.currentIndex + 1 > this.$store.state.hlAudio.musicList.length
@@ -75,38 +78,51 @@ export default {
       this.$store.state.hlAudio.currentMusic =
         this.$store.state.hlAudio.musicList[this.currentIndex];
     },
+    //监听音乐结束
     AudioContextOnEnded() {
       this.$store.state.hlAudio.innerAudioContext.onEnded(() => {
         console.log("播放结束");
-        this.$store.state.hlAudio.innerAudioContext.destroy();
-        if (this.$store.state.hlAudio.playSeq == 2) {
-          this.getSongInfo();
-        } else if (this.$store.state.hlAudio.playSeq == 1) {
-          this.inOrderSongPlay();
+        // this.$store.state.hlAudio.innerAudioContext.destroy();
+
+        this.num++;
+        console.log(this.num, "跳转次数");
+        if (this.num == 1) {
+          if (this.$store.state.hlAudio.playSeq == 2) {
+            this.getSongInfo();
+          } else if (this.$store.state.hlAudio.playSeq == 1) {
+            console.log(11);
+            this.inOrderSongPlay();
+          } else {
+            this.randomSongPlay();
+          }
         } else {
-          this.randomSongPlay();
+          this.num = 0;
         }
       });
     },
     async getSongInfo(id) {
-      this.$store.state.hlAudio.innerAudioContext =
-        this.$store.getters["hlAudio/innerAudioContext"];
+      // this.$store.state.hlAudio.innerAudioContext =
+      //   this.$store.getters["hlAudio/innerAudioContext"];
       const res = await this.$api.$homeApi.getSongUrl(id);
       if (res.code == 200) {
         this.currentSongUrl = res.data[0].url;
+        console.log(this.$store.state.hlAudio.currentMusic.name, "歌名");
         this.$store.state.hlAudio.currentSongUrl = res.data[0].url;
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
+        console.log(res.data[0]);
+        this.$store.state.hlAudio.innerAudioContext.startTime =
+          (res.data[0].time - 10000) / 1000;
+
         this.$store.state.hlAudio.innerAudioContext.play();
-        console.log(111);
+        this.AudioContextOnEnded();
         this.isPlay = true;
         this.$forceUpdate();
       }
     },
   },
   mounted() {
-    this.InfiAudio();
-    this.AudioContextOnEnded();
+    this.InitAudio();
   },
 };
 </script>
