@@ -81,7 +81,6 @@ export default {
     //监听音乐结束
     AudioContextOnEnded() {
       this.$store.state.hlAudio.innerAudioContext.onEnded(() => {
-        console.log("一曲播放结束");
         this.num++;
         if (this.num == 1) {
           if (this.$store.state.hlAudio.playSeq == 2) {

@@ -10,9 +10,6 @@
           <hl-icon :icon="iconName" size="40rpx" color="#666"></hl-icon>
           <text class="container_btns_left_info">{{ playMethods }}</text>
         </view>
-        <view class="container_btns_right">
-          <hl-icon icon="icon-shanchu" size="50rpx" color="#666"></hl-icon>
-        </view>
       </view>
       <view class="container_musics">
         <view
@@ -40,8 +37,14 @@
               >
             </view>
           </view>
-          <view class="container_musics_music_right">
-            <view>X</view>
+
+          <view class="container_musics_music_right" @click="deleteSong(index)">
+            <hl-icon
+              icon="icon-shoucang"
+              size="40rpx"
+              color="#c7c4c4"
+            ></hl-icon>
+            <view class="container_musics_music_right_delete">X</view>
           </view>
         </view>
       </view>
@@ -109,6 +112,10 @@ export default {
           : "icon-suijibofang";
       this.$store.state.hlAudio.playSeq = this.playSeq;
     },
+    //删除
+    deleteSong(index) {
+      this.musicList.splice(index, 1);
+    },
   },
   mounted() {},
 };
@@ -173,6 +180,10 @@ export default {
         }
         &_right {
           color: rgb(201, 201, 201);
+          display: flex;
+          &_delete {
+            margin-left: 20rpx;
+          }
         }
       }
     }

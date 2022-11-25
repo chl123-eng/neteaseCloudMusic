@@ -5,6 +5,7 @@
       fontSize: size,
       color: color,
     }"
+    @click="$emit('click')"
   ></i>
 </template>
 <script>

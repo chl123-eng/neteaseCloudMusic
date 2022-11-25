@@ -39,10 +39,7 @@ export default {
       }
     },
     async getMusicList(item) {
-      let param = item.id;
-      console.log(param);
-
-      let params = "2041615881";
+      let params = item.id;
       const res = await this.$api.$homeApi.playList(params);
       this.musicList = res.playlist.tracks;
       this.$store.state.hlAudio.musicList = this.musicList;

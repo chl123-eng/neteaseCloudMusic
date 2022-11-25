@@ -4,12 +4,17 @@
  * @Author: chl
  * @Date: 2022-11-03 16:09:42
  * @LastEditors: chl123-eng 1326090238@qq.com
- * @LastEditTime: 2022-11-13 10:39:37
+ * @LastEditTime: 2022-11-25 12:01:04
 -->
 <template>
   <view class="content">
     <view class="content_searchBox">
-      <uni-search-bar radius="100" bgColor="#fff" v-model="searchStr" />
+      <uni-search-bar
+        radius="100"
+        bgColor="#fff"
+        cancelButton="none"
+        @focus="focusSearchBox"
+      />
     </view>
     <view class="content_main">
       <view class="content_main_swiper">
@@ -35,7 +40,13 @@ export default {
       recommendMusic: {},
     };
   },
-  methods: {},
+  methods: {
+    focusSearchBox() {
+      uni.navigateTo({
+        url: "/pages/search/index",
+      });
+    },
+  },
 };
 </script>
 <style lang="scss">
