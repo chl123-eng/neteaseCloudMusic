@@ -26,6 +26,7 @@
         <view
           v-for="(item, index) in searchHistoryList"
           :key="index"
+          :id="`hisContItemRef_${index}`"
           class="content_history_content_item"
         >
           <text>{{ item }}</text>
@@ -51,8 +52,34 @@ export default {
       searchHistoryList: [],
       isUp: false,
       historyIcon: "icon-down",
-      hisIconVisible: false,
+      hisIconVisible: true,
+      searchHistoryEles: [],
+      Viewport,
     };
+  },
+  watch: {
+    searchHistoryList(val) {
+      if (val) {
+        this.$nextTick(() => {
+          uni
+            .createSelectorQuery()
+            .selectAll(".content_history_content_item")
+            .boundingClientRect((data) => {
+              this.searchHistoryEles = data;
+            })
+            .exec();
+        });
+      }
+    },
+    searchHistoryEles(val) {
+      if (val) {
+        let sumWidth = 0;
+        val.forEach((item) => {
+          sumWidth = sumWidth + item.width;
+          // if(sumWidth > )
+        });
+      }
+    },
   },
   methods: {
     focusSearch() {
@@ -76,6 +103,13 @@ export default {
   },
   mounted() {
     this.searchBarStyle = "width: 82%;";
+    uni
+      .createSelectorQuery()
+      .selectViewport(".content_history_content")
+      .boundingClientRect((data) => {
+        this.searchHistoryEles = data;
+      })
+      .exec();
   },
 };
 </script>
