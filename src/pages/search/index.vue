@@ -27,10 +27,10 @@
           v-for="(item, index) in searchHistoryList"
           :key="index"
           :id="`hisContItemRef_${index}`"
-          class="content_history_content_item"
         >
-          <text>{{ item }}</text>
-          <text style="margin-left: 20rpx" @click="deleteItem(index)">x</text>
+          <view class="content_history_content_item" v-if="item.isVisible">{{
+            item.val
+          }}</view>
         </view>
       </view>
       <view
@@ -52,14 +52,15 @@ export default {
       searchHistoryList: [],
       isUp: false,
       historyIcon: "icon-down",
-      hisIconVisible: true,
+      hisIconVisible: false,
       searchHistoryEles: [],
-      Viewport,
+      viewPortWidth: 0,
     };
   },
   watch: {
     searchHistoryList(val) {
       if (val) {
+        console.log(11);
         this.$nextTick(() => {
           uni
             .createSelectorQuery()
@@ -68,16 +69,14 @@ export default {
               this.searchHistoryEles = data;
             })
             .exec();
+          console.log(this.searchHistoryEles);
         });
       }
     },
     searchHistoryEles(val) {
       if (val) {
-        let sumWidth = 0;
-        val.forEach((item) => {
-          sumWidth = sumWidth + item.width;
-          // if(sumWidth > )
-        });
+        this.isDaYuViewPort();
+        // this.$forceUpdate();
       }
     },
   },
@@ -95,19 +94,41 @@ export default {
       this.historyIcon = this.isUp ? "icon-up" : "icon-down";
     },
     search() {
-      this.searchHistoryList.unshift(this.searchStr);
+      let param = {
+        val: this.searchStr,
+        isVisible: false,
+      };
+      this.searchHistoryList.unshift(param);
     },
-    deleteItem(index) {
-      this.searchHistoryList.splice(index, 1);
+    //判断搜索历史字段是否大于可视界面宽度
+    isDaYuViewPort() {
+      let sumWidth = 0;
+      let jieZhiIndex = [];
+      this.searchHistoryEles.forEach((item, index) => {
+        sumWidth = sumWidth + item.width + 50;
+        if (sumWidth > this.viewPortWidth) {
+          this.hisIconVisible = true;
+          jieZhiIndex.push(index);
+        } else {
+          this.hisIconVisible = false;
+        }
+      });
+      this.searchHistoryList.forEach((item, index) => {
+        if (jieZhiIndex.length == 0) {
+          item.isVisible = true;
+        } else {
+          item.isVisible = index < jieZhiIndex[0] ? true : false;
+        }
+      });
     },
   },
   mounted() {
     this.searchBarStyle = "width: 82%;";
     uni
       .createSelectorQuery()
-      .selectViewport(".content_history_content")
+      .select(".content_history_content")
       .boundingClientRect((data) => {
-        this.searchHistoryEles = data;
+        this.viewPortWidth = data.width;
       })
       .exec();
   },
@@ -137,12 +158,16 @@ export default {
       flex-wrap: wrap;
       &_item {
         width: fit-content;
+        max-width: 200rpx;
         padding: 5rpx 10rpx;
         margin: 0 10rpx;
         background-color: #fff;
         border-radius: 40rpx;
         font-size: 30rpx;
         color: #999;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
     &_icon {
