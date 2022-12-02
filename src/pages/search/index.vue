@@ -20,31 +20,36 @@
     <view class="content_history">
       <view class="content_history_title">
         <view>历史</view>
-        <hl-icon icon="icon-shanchu" size="40rpx"></hl-icon>
+        <hl-icon
+          icon="icon-shanchu"
+          size="40rpx"
+          @click="deleteHistoruList"
+        ></hl-icon>
       </view>
       <view class="content_history_content">
-        <view
-          v-for="(item, index) in searchHistoryList"
-          :key="index"
-          :id="`hisContItemRef_${index}`"
-        >
+        <view v-for="(item, index) in searchHistoryList" :key="index">
           <view class="content_history_content_item" v-if="item.isVisible">{{
             item.val
           }}</view>
         </view>
-      </view>
-      <view
-        class="content_history_icon"
-        @click="clickHostoryIcon"
-        v-if="hisIconVisible"
-      >
-        <hl-icon :icon="historyIcon" size="32rpx"></hl-icon>
+        <view
+          class="content_history_icon"
+          @click="clickHostoryIcon"
+          v-if="hisIconVisible"
+        >
+          <hl-icon :icon="historyIcon" size="32rpx"></hl-icon>
+        </view>
       </view>
     </view>
+    <view class="content_rankings"> <rankings></rankings> </view>
   </view>
 </template>
 <script>
+import rankings from "./rangking.vue";
 export default {
+  components: {
+    rankings,
+  },
   data() {
     return {
       searchStr: "",
@@ -60,7 +65,6 @@ export default {
   watch: {
     searchHistoryList(val) {
       if (val) {
-        console.log(11);
         this.$nextTick(() => {
           uni
             .createSelectorQuery()
@@ -69,14 +73,13 @@ export default {
               this.searchHistoryEles = data;
             })
             .exec();
-          console.log(this.searchHistoryEles);
         });
       }
     },
     searchHistoryEles(val) {
       if (val) {
         this.isDaYuViewPort();
-        // this.$forceUpdate();
+        this.$forceUpdate();
       }
     },
   },
@@ -92,20 +95,28 @@ export default {
     clickHostoryIcon() {
       this.isUp = !this.isUp;
       this.historyIcon = this.isUp ? "icon-up" : "icon-down";
+      if (this.isUp) {
+        this.searchHistoryList.forEach((item) => {
+          item.isVisible = true;
+        });
+      } else {
+        this.isDaYuViewPort();
+      }
+      this.$forceUpdate();
     },
     search() {
       let param = {
         val: this.searchStr,
-        isVisible: false,
+        isVisible: true,
       };
       this.searchHistoryList.unshift(param);
     },
-    //判断搜索历史字段是否大于可视界面宽度
+    //判断搜索历史字段是否大于可视界面宽度,进行展开和收起
     isDaYuViewPort() {
       let sumWidth = 0;
       let jieZhiIndex = [];
       this.searchHistoryEles.forEach((item, index) => {
-        sumWidth = sumWidth + item.width + 50;
+        sumWidth = sumWidth + item.width + 40;
         if (sumWidth > this.viewPortWidth) {
           this.hisIconVisible = true;
           jieZhiIndex.push(index);
@@ -121,6 +132,10 @@ export default {
         }
       });
     },
+    deleteHistoruList() {
+      this.searchHistoryList = [];
+      this.hisIconVisible = false;
+    },
   },
   mounted() {
     this.searchBarStyle = "width: 82%;";
@@ -134,7 +149,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .content {
   width: 100vw;
   height: 100vh;
