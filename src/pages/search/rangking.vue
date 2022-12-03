@@ -1,12 +1,30 @@
 <template>
-  <view class="content">
-    <view class="content_item" v-for="(item, index) in rankings" :key="index">
-      <view class="content_item_title">{{ item.title }}</view>
-      <view class="content_item_list">
-        <view class="content_item_list_num"></view>
-        <view class="content_item_list_name"></view>
-      </view>
-    </view>
+  <view class="swiper-box">
+    <!-- autoplay -->
+    <swiper circular class="swiper">
+      <swiper-item
+        class="swiper-item"
+        v-for="(item, index) in rankings"
+        :key="index"
+      >
+        <view class="content">
+          <view class="content_title">{{ item.title }}</view>
+          <view
+            :class="[
+              {
+                content_list_hottest: index == 0 || index == 1 || index == 2,
+              },
+              'content_list',
+            ]"
+            v-for="(i, index) in item.list"
+            :key="index"
+          >
+            <view class="content_list_num">{{ index + 1 }}</view>
+            <view class="content_list_name">{{ i.first }}</view></view
+          >
+        </view>
+      </swiper-item>
+    </swiper>
   </view>
 </template>
 <script>
@@ -16,24 +34,70 @@ export default {
       rankings: [
         {
           title: "热搜榜",
+          list: [],
         },
         {
           title: "话题榜",
+          list: [],
         },
       ],
     };
   },
+  methods: {
+    //热搜榜
+    async getSearchHot() {
+      const res = await this.$api.$searchApi.searchHot();
+      if (res.code == 200) {
+        this.rankings[0].list = res.result.hots;
+      }
+    },
+    //话题榜
+    async getSearchTopic() {
+      const res = await this.$api.$searchApi.hotTopic();
+      console.log(res);
+      // if (res.code == 200) {
+      //   this.rankings[1].list = res.result.hots;
+      // }
+    },
+  },
+  mounted() {
+    this.getSearchHot();
+    this.getSearchTopic();
+  },
 };
 </script>
-<style lang="scss" scoped>
-.content {
-  display: flex;
-  &_item {
-    width: 600rpx;
-    height: 1000rpx;
-    background-color: #fff;
-    border-radius: 20rpx;
-    margin-right: 20rpx;
+<style lang="scss">
+.swiper-box {
+  padding: 40rpx 0;
+  .swiper {
+    width: 100%;
+    height: 1000rpx !important;
+    .swiper-item {
+      width: 500rpx !important;
+      padding-right: 40rpx;
+      background-color: rgb(252, 250, 250);
+      .content {
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        border-radius: 40rpx;
+        &_title {
+          padding: 40rpx;
+          font-size: 34rpx;
+          border-bottom: 1px solid #eee;
+        }
+        &_list {
+          padding: 20rpx 40rpx;
+          display: flex;
+          &_hottest {
+            color: red;
+          }
+          &_num {
+            margin-right: 20rpx;
+          }
+        }
+      }
+    }
   }
 }
 </style>
