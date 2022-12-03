@@ -1,11 +1,11 @@
 <template>
   <view class="swiper-box">
-    <!-- autoplay -->
-    <swiper circular class="swiper">
+    <swiper class="swiper" @change="change" :current="swiperIndex">
       <swiper-item
         class="swiper-item"
         v-for="(item, index) in rankings"
         :key="index"
+        :style="index == 0 ? styleObject1 : styleObject2"
       >
         <view class="content">
           <view class="content_title">{{ item.title }}</view>
@@ -20,7 +20,9 @@
             :key="index"
           >
             <view class="content_list_num">{{ index + 1 }}</view>
-            <view class="content_list_name">{{ i.first }}</view></view
+            <view class="content_list_name">{{
+              i.first || i.albumName
+            }}</view></view
           >
         </view>
       </swiper-item>
@@ -37,10 +39,13 @@ export default {
           list: [],
         },
         {
-          title: "话题榜",
+          title: "专辑周榜",
           list: [],
         },
       ],
+      swiperIndex: 0,
+      styleObject1: {},
+      styleObject2: {},
     };
   },
   methods: {
@@ -52,17 +57,34 @@ export default {
       }
     },
     //话题榜
-    async getSearchTopic() {
-      const res = await this.$api.$searchApi.hotTopic();
-      console.log(res);
-      // if (res.code == 200) {
-      //   this.rankings[1].list = res.result.hots;
-      // }
+    async getSearchAlbum() {
+      const res = await this.$api.$searchApi.hotAlbum();
+      if (res.code == 200) {
+        res.products.forEach((e, i) => {
+          if (i < 10) {
+            this.rankings[1].list.push(e);
+          }
+        });
+      }
+    },
+    change(e) {
+      this.swiperIndex = e.detail.current;
+      if (this.swiperIndex == 1) {
+        this.styleObject1 =
+          "transform: translate(30%, 0px) translateZ(0px) !important;position: absolute;";
+        this.styleObject2 =
+          "transform: translate(130%, 0px) translateZ(0px) !important;position: absolute;";
+      } else {
+        this.styleObject1 =
+          "transform: translate(0%, 0px) translateZ(0px) !important;position: absolute;";
+        this.styleObject2 =
+          "transform: translate(100%, 0px) translateZ(0px) !important;position: absolute;";
+      }
     },
   },
   mounted() {
     this.getSearchHot();
-    this.getSearchTopic();
+    this.getSearchAlbum();
   },
 };
 </script>
