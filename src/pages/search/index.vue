@@ -18,24 +18,33 @@
       <view @click="search">搜索</view>
     </view>
     <view class="content_bottom">
-      <search-history :searchStrObj="searchStrObj"></search-history>
-      <view class="content_bottom_rankings"> <rankings></rankings> </view>
+      <view v-if="searchHomeVisible">
+        <search-history :searchStrObj="searchStrObj"></search-history>
+        <view class="content_bottom_rankings"> <rankings></rankings> </view>
+      </view>
+      <view v-if="searchListVisible">
+        <search-list :searchStr="searchStr"></search-list>
+      </view>
     </view>
   </view>
 </template>
 <script>
 import rankings from "./rangking.vue";
 import searchHistory from "./searchHistory.vue";
+import searchList from "./searchList.vue";
 export default {
   components: {
     rankings,
     searchHistory,
+    searchList,
   },
   data() {
     return {
       searchStr: "",
       searchBarStyle: {},
       searchStrObj: {},
+      searchHomeVisible: false,
+      searchListVisible: true,
     };
   },
 
