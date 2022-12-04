@@ -90,7 +90,7 @@ export default {
 </script>
 <style lang="scss">
 .swiper-box {
-  padding: 40rpx 0;
+  padding-top: 40rpx;
   .swiper {
     width: 100%;
     height: 1000rpx !important;
@@ -100,7 +100,6 @@ export default {
       background-color: rgb(252, 250, 250);
       .content {
         width: 100%;
-        height: 100%;
         background-color: #fff;
         border-radius: 40rpx;
         &_title {
@@ -116,6 +115,12 @@ export default {
           }
           &_num {
             margin-right: 20rpx;
+          }
+          &_name {
+            width: 360rpx;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: noWrap;
           }
         }
       }
