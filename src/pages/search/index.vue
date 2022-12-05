@@ -11,7 +11,7 @@
         bgColor="#eee"
         :style="searchBarStyle"
         v-model="searchStr"
-        @cancel="cancelSearch"
+        @cancel="cancelsearchListVisibleSearch"
         @focus="focusSearch"
         cancelButton="none"
       />
@@ -22,8 +22,8 @@
         <search-history :searchStrObj="searchStrObj"></search-history>
         <view class="content_bottom_rankings"> <rankings></rankings> </view>
       </view>
-      <view v-if="searchListVisible">
-        <search-list :searchStr="searchStr"></search-list>
+      <view v-if="searchResultVisible">
+        <search-result :searchStr="searchStr"></search-result>
       </view>
     </view>
   </view>
@@ -31,23 +31,36 @@
 <script>
 import rankings from "./rangking.vue";
 import searchHistory from "./searchHistory.vue";
-import searchList from "./searchList.vue";
+import searchResult from "./searchResult.vue";
 export default {
   components: {
     rankings,
     searchHistory,
-    searchList,
+    searchResult,
   },
+
   data() {
     return {
-      searchStr: "",
+      searchStr: "周杰伦",
       searchBarStyle: {},
       searchStrObj: {},
       searchHomeVisible: false,
-      searchListVisible: true,
+      searchResultVisible: true,
     };
   },
-
+  provide() {
+    return {
+      searchStrValue: () => this.searchStr,
+    };
+  },
+  watch: {
+    searchStr(val) {
+      if (!val) {
+        this.searchHomeVisible = true;
+        this.searchResultVisible = false;
+      }
+    },
+  },
   methods: {
     focusSearch() {
       this.searchBarStyle = "width: 82%;";
@@ -63,6 +76,10 @@ export default {
         isVisible: true,
       };
       this.searchStrObj = param;
+      this.$nextTick(() => {
+        this.searchHomeVisible = false;
+        this.searchResultVisible = true;
+      });
     },
   },
   mounted() {

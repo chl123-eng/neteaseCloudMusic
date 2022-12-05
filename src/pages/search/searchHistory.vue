@@ -48,6 +48,7 @@ export default {
     searchStrObj(val) {
       if (val) {
         this.searchHistoryList.unshift(val);
+        this.$store.state.search.searchHistoryList = this.searchHistoryList;
       }
     },
     searchHistoryList(val) {
@@ -120,6 +121,7 @@ export default {
         this.viewPortWidth = data.width;
       })
       .exec();
+    this.searchHistoryList = this.$store.state.search.searchHistoryList;
   },
 };
 </script>
