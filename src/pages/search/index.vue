@@ -19,7 +19,10 @@
     </view>
     <view class="content_bottom">
       <view v-if="searchHomeVisible">
-        <search-history :searchStrObj="searchStrObj"></search-history>
+        <search-history
+          :searchStrObj="searchStrObj"
+          @selectOneHistoryData="setSearchStr"
+        ></search-history>
         <view class="content_bottom_rankings"> <rankings></rankings> </view>
       </view>
       <view v-if="searchResultVisible">
@@ -80,6 +83,10 @@ export default {
         this.searchHomeVisible = false;
         this.searchResultVisible = true;
       });
+    },
+    setSearchStr(val) {
+      this.searchStr = val.val;
+      this.search();
     },
   },
   mounted() {

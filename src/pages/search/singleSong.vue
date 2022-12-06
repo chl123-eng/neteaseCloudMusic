@@ -1,6 +1,6 @@
 <template>
-  <view class="content">
-    <view class="content_title">
+  <view :class="['content', { sumContent: isSum }]">
+    <view class="content_title" v-if="!isSum">
       <view class="content_title_left"> 单曲 </view>
     </view>
     <view class="content_main">
@@ -8,23 +8,27 @@
         class="content_main_item"
         v-for="(item, index) in songList"
         :key="index"
-        v-show="isSum && index < 4"
+        v-show="!isSum ? index < 4 : index > -1"
       >
         <view
           class="content_main_item_songName"
           :class="{ content_main_item_match: match(item.name) }"
           >{{ item.name }}</view
         >
-        <view class="content_main_item_singer">
+        <view class="content_main_item_singers">
           <view
             v-for="(i, index) in item.ar"
             :key="index"
             :class="{ content_main_item_match: match(i.name) }"
-            >{{ i.name }}<text v-if="index < item.ar.length - 1">/</text></view
+            class="content_main_item_singer"
+          >
+            {{ i.name }}<text v-if="index < item.ar.length - 1">/</text></view
           >
         </view>
       </view>
-      <view class="content_main_tip">查看全部{{ songsNum }}首单曲</view>
+      <view class="content_main_tip" @click="getTotal" v-if="!isSum"
+        >查看全部{{ songsNum }}首单曲</view
+      >
     </view>
   </view>
 </template>
@@ -34,7 +38,7 @@ export default {
   data() {
     return {
       songList: [],
-      isSum: true,
+      isSum: false,
       songsNum: 0,
     };
   },
@@ -68,6 +72,10 @@ export default {
     match(str) {
       return str.includes(this.searchStr);
     },
+    getTotal() {
+      this.isSum = true;
+      this.$emit("getTotal", this.isSum);
+    },
   },
   mounted() {
     this.getSongList();
@@ -75,11 +83,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.sumContent {
+  height: 100% !important;
+  background-color: rgb(252, 250, 250) !important;
+}
 .content {
   width: 100%;
   height: 800rpx;
   background-color: #fff;
   border-radius: 30rpx;
+  margin-bottom: 40rpx;
   &_title {
     font-size: 40rpx;
     padding: 40rpx;
@@ -93,11 +106,14 @@ export default {
       &_match {
         color: rgb(8, 132, 163) !important;
       }
-      &_singer {
+      &_singers {
         display: flex;
         font-size: 24rpx;
         color: #999;
         margin-top: 10rpx;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: noWrap;
       }
     }
     &_tip {

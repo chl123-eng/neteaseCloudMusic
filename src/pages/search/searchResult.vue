@@ -11,14 +11,19 @@
         <view class="content_top_item_line" v-if="item.lineVisible"></view>
       </view>
     </view>
-    <view class="content_bottom"> <single-song></single-song> </view>
+    <view class="content_bottom">
+      <single-song v-if="singleSongVisible" @getTotal="total"></single-song>
+      <song-menu v-if="songMenuVisible"></song-menu
+    ></view>
   </view>
 </template>
 <script>
 import singleSong from "./singleSong.vue";
+import songMenu from "./songMenu.vue";
 export default {
   components: {
     singleSong,
+    songMenu,
   },
   props: {
     searchStr: {
@@ -46,14 +51,39 @@ export default {
         },
       ],
       acitveTab: "multiple",
+      singleSongVisible: true,
+      songMenuVisible: true,
     };
+  },
+  watch: {
+    acitveTab(val) {
+      switch (val) {
+        case "multiple":
+          this.singleSongVisible = true;
+          this.songMenuVisible = true;
+          break;
+        case "singleSong":
+          this.singleSongVisible = true;
+          this.songMenuVisible = false;
+          break;
+        case "songMenu":
+          this.singleSongVisible = false;
+          this.songMenuVisible = true;
+          break;
+      }
+      this.tabList.filter((item) => {
+        item.lineVisible = item.id == this.acitveTab;
+      });
+    },
   },
   methods: {
     selectTab(i) {
       this.acitveTab = i;
-      this.tabList.filter((item) => {
-        item.lineVisible = item.id == this.acitveTab;
-      });
+    },
+    total(val) {
+      if (val) {
+        this.acitveTab = "singleSong";
+      }
     },
   },
   mounted() {

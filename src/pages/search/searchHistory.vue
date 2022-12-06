@@ -13,6 +13,7 @@
         <view
           class="content_bottom_history_content_item"
           v-if="item.isVisible"
+          @click="selectOne(item)"
           >{{ item.val }}</view
         >
       </view>
@@ -47,8 +48,16 @@ export default {
   watch: {
     searchStrObj(val) {
       if (val) {
-        this.searchHistoryList.unshift(val);
-        this.$store.state.search.searchHistoryList = this.searchHistoryList;
+        let flag = 0;
+        this.searchHistoryList.forEach((item) => {
+          if (item.val == val.val) {
+            flag = 1;
+          }
+        });
+        if (flag == 0) {
+          this.searchHistoryList.unshift(val);
+          this.$store.state.search.searchHistoryList = this.searchHistoryList;
+        }
       }
     },
     searchHistoryList(val) {
@@ -109,6 +118,9 @@ export default {
     deleteHistoruList() {
       this.searchHistoryList = [];
       this.hisIconVisible = false;
+    },
+    selectOne(item) {
+      this.$emit("selectOneHistoryData", item);
     },
   },
   mounted() {
