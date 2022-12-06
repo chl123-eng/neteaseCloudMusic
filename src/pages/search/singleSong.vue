@@ -35,11 +35,17 @@
 <script>
 export default {
   inject: ["searchStrValue"],
+  props: {
+    isSumValue: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       songList: [],
-      isSum: false,
       songsNum: 0,
+      isSum: false,
     };
   },
   computed: {
@@ -54,6 +60,9 @@ export default {
       } else {
         this.songList = [];
       }
+    },
+    isSumValue(val) {
+      this.isSum = val;
     },
   },
 
@@ -78,6 +87,7 @@ export default {
     },
   },
   mounted() {
+    this.isSum = this.isSumValue;
     this.getSongList();
   },
 };

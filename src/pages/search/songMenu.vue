@@ -1,6 +1,6 @@
 <template>
-  <view class="content">
-    <view class="content_title">
+  <view :class="['content', { sumContent: isSum }]">
+    <view class="content_title" v-if="!isSum">
       <view class="content_title_left"> 歌单</view>
     </view>
     <view class="content_main">
@@ -8,8 +8,9 @@
         class="content_main_item"
         v-for="(item, index) in songMenuList"
         :key="index"
-        v-show="isSum && index < 4"
+        v-show="!isSum ? index < 4 : index > -1"
       >
+        {{ !isSum ? index < 4 : index > -1 }}
         <view class="content_main_item_left">
           <img :src="item.coverImgUrl" />
         </view>
@@ -33,16 +34,24 @@
         </view>
       </view>
     </view>
-    <view class="content_main_tip">查看全部{{ songMenuNum }}首单曲</view>
+    <view class="content_main_tip" @click="getTotal" v-if="!isSum"
+      >查看全部{{ songMenuNum }}首单曲</view
+    >
   </view>
 </template>
 <script>
 export default {
   inject: ["searchStrValue"],
+  props: {
+    isMenuSumValue: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       songMenuList: [],
-      isSum: true,
+      isSum: false,
       songMenuNum: 0,
     };
   },
@@ -58,6 +67,9 @@ export default {
       } else {
         this.songList = [];
       }
+    },
+    isMenuSumValue(val) {
+      this.isSum = val;
     },
   },
 
@@ -76,13 +88,22 @@ export default {
     match(str) {
       return str.includes(this.searchStr);
     },
+    getTotal() {
+      this.isSum = true;
+      this.$emit("getMenuTotal", this.isSum);
+    },
   },
   mounted() {
     this.getSongList();
+    this.isSum = this.isMenuSumValue;
   },
 };
 </script>
 <style lang="scss" scoped>
+.sumContent {
+  height: 100% !important;
+  background-color: rgb(252, 250, 250) !important;
+}
 .content {
   width: 100%;
   height: 800rpx;

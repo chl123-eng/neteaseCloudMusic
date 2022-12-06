@@ -12,8 +12,16 @@
       </view>
     </view>
     <view class="content_bottom">
-      <single-song v-if="singleSongVisible" @getTotal="total"></single-song>
-      <song-menu v-if="songMenuVisible"></song-menu
+      <single-song
+        v-if="singleSongVisible"
+        @getTotal="total"
+        :isSumValue="sum"
+      ></single-song>
+      <song-menu
+        v-if="songMenuVisible"
+        @getMenuTotal="menuTotal"
+        :isMenuSumValue="menuSum"
+      ></song-menu
     ></view>
   </view>
 </template>
@@ -24,12 +32,6 @@ export default {
   components: {
     singleSong,
     songMenu,
-  },
-  props: {
-    searchStr: {
-      type: String,
-      default: "",
-    },
   },
   data() {
     return {
@@ -53,20 +55,28 @@ export default {
       acitveTab: "multiple",
       singleSongVisible: true,
       songMenuVisible: true,
+      sum: false,
+      menuSum: false,
     };
   },
   watch: {
     acitveTab(val) {
       switch (val) {
         case "multiple":
+          this.sum = false;
+          this.menuSum = false;
           this.singleSongVisible = true;
           this.songMenuVisible = true;
           break;
         case "singleSong":
+          this.sum = true;
+          this.menuSum = false;
           this.singleSongVisible = true;
           this.songMenuVisible = false;
           break;
         case "songMenu":
+          this.sum = false;
+          this.menuSum = true;
           this.singleSongVisible = false;
           this.songMenuVisible = true;
           break;
@@ -83,6 +93,11 @@ export default {
     total(val) {
       if (val) {
         this.acitveTab = "singleSong";
+      }
+    },
+    menuTotal(val) {
+      if (val) {
+        this.acitveTab = "songMenu";
       }
     },
   },
