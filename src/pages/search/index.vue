@@ -23,7 +23,9 @@
           :searchStrObj="searchStrObj"
           @selectOneHistoryData="setSearchStr"
         ></search-history>
-        <view class="content_bottom_rankings"> <rankings></rankings> </view>
+        <view class="content_bottom_rankings">
+          <rankings @rankSelectOne="selectRankOne"></rankings>
+        </view>
       </view>
       <view v-if="searchResultVisible">
         <search-result :searchStr="searchStr"></search-result>
@@ -44,11 +46,11 @@ export default {
 
   data() {
     return {
-      searchStr: "周杰伦",
+      searchStr: "",
       searchBarStyle: {},
       searchStrObj: {},
-      searchHomeVisible: false,
-      searchResultVisible: true,
+      searchHomeVisible: true,
+      searchResultVisible: false,
     };
   },
   provide() {
@@ -79,6 +81,15 @@ export default {
         isVisible: true,
       };
       this.searchStrObj = param;
+      let flag = 0;
+      this.$store.state.search.searchHistoryList.forEach((item) => {
+        if (item.val == param.val) {
+          flag = 1;
+        }
+      });
+      if (flag == 0) {
+        this.$store.state.search.searchHistoryList.unshift(param);
+      }
       this.$nextTick(() => {
         this.searchHomeVisible = false;
         this.searchResultVisible = true;
@@ -86,6 +97,10 @@ export default {
     },
     setSearchStr(val) {
       this.searchStr = val.val;
+      this.search();
+    },
+    selectRankOne(val) {
+      this.searchStr = val.first || val.albumName;
       this.search();
     },
   },

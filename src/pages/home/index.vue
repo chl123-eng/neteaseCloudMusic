@@ -50,6 +50,9 @@ export default {
       this.activeTab = val;
     },
   },
+  mounted() {
+    this.currentMusic = this.$store.state.hlAudio.currentMusic;
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -66,7 +69,7 @@ export default {
     width: 100%;
     height: 140rpx;
     border-top: 1px solid #eee;
-    bottom: 106rpx;
+    // bottom: 106rpx;
   }
   &_navigation {
     width: 100%;

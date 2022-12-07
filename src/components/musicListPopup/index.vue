@@ -1,5 +1,10 @@
 <template>
-  <uni-popup ref="popup" type="bottom" class="musicListPopup">
+  <uni-popup
+    ref="popup"
+    type="bottom"
+    class="musicListPopup"
+    @maskClick="maskClick"
+  >
     <view class="container">
       <view class="container_title">
         <text class="container_title_info">当前播放</text>
@@ -73,8 +78,10 @@ export default {
         this.musicList.forEach((i) => {
           i.isPlay = false;
         });
-        this.$store.state.hlAudio.currentMusic = val[0];
-        this.$store.state.hlAudio.currentIndex = 0;
+        if (!this.$store.state.hlAudio.currentMusic) {
+          this.$store.state.hlAudio.currentMusic = val[0];
+          this.$store.state.hlAudio.currentIndex = 0;
+        }
       }
     },
     "$store.state.hlAudio.currentMusic"(val) {
@@ -87,7 +94,6 @@ export default {
   methods: {
     open() {
       this.$refs.popup.open("bottom");
-      this.$store.state.recommendList.openMusicList = false;
     },
     selectOneSong(item, index) {
       this.$store.state.hlAudio.currentMusic = item;
@@ -116,8 +122,13 @@ export default {
     deleteSong(index) {
       this.musicList.splice(index, 1);
     },
+    maskClick() {
+      this.$store.state.recommendList.openMusicList = false;
+    },
   },
-  mounted() {},
+  mounted() {
+    this.musicList = this.$store.state.hlAudio.musicList;
+  },
 };
 </script>
 <style lang="scss" scoped>

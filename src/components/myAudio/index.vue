@@ -57,7 +57,6 @@ export default {
       }
     },
     clickMusicList() {
-      this.openMusicList = !this.openMusicList;
       this.$store.state.recommendList.openMusicList = true;
     },
     //列表播放

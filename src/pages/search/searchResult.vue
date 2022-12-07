@@ -16,13 +16,19 @@
         v-if="singleSongVisible"
         @getTotal="total"
         :isSumValue="sum"
+        @noSongs="isNoSongs"
       ></single-song>
       <song-menu
         v-if="songMenuVisible"
         @getMenuTotal="menuTotal"
         :isMenuSumValue="menuSum"
-      ></song-menu
-    ></view>
+        @noSongMenus="isNoSongMenus"
+      >
+      </song-menu>
+      <view class="content_bottom_nodata" v-if="dataImgVisible()">
+        <img src="../../static/img/noData.png" />
+      </view>
+    </view>
   </view>
 </template>
 <script>
@@ -57,6 +63,8 @@ export default {
       songMenuVisible: true,
       sum: false,
       menuSum: false,
+      noSongMenus: false,
+      noSongs: false,
     };
   },
   watch: {
@@ -98,6 +106,22 @@ export default {
     menuTotal(val) {
       if (val) {
         this.acitveTab = "songMenu";
+      }
+    },
+    isNoSongs(val) {
+      this.noSongs = val;
+    },
+    isNoSongMenus(val) {
+      this.noSongMenus = val;
+    },
+    dataImgVisible() {
+      switch (this.acitveTab) {
+        case "multiple":
+          return this.noSongs && this.noSongMenus;
+        case "singleSong":
+          return this.noSongs;
+        case "songMenu":
+          return this.noSongMenus;
       }
     },
   },

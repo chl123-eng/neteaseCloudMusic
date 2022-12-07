@@ -10,20 +10,19 @@
         <view class="content">
           <view class="content_title">{{ item.title }}</view>
           <view
+            v-for="(i, iIndex) in item.list"
+            :key="iIndex"
             :class="[
               {
-                content_list_hottest: index == 0 || index == 1 || index == 2,
+                content_list_hottest: iIndex == 0 || iIndex == 1 || iIndex == 2,
               },
               'content_list',
             ]"
-            v-for="(i, index) in item.list"
-            :key="index"
+            @click="selectOne(i)"
           >
-            <view class="content_list_num">{{ index + 1 }}</view>
-            <view class="content_list_name">{{
-              i.first || i.albumName
-            }}</view></view
-          >
+            <view class="content_list_num">{{ iIndex + 1 }}</view>
+            <view class="content_list_name">{{ i.first || i.albumName }}</view>
+          </view>
         </view>
       </swiper-item>
     </swiper>
@@ -67,6 +66,7 @@ export default {
         });
       }
     },
+    //切换榜单
     change(e) {
       this.swiperIndex = e.detail.current;
       if (this.swiperIndex == 1) {
@@ -80,6 +80,10 @@ export default {
         this.styleObject2 =
           "transform: translate(100%, 0px) translateZ(0px) !important;position: absolute;";
       }
+    },
+    //点击选择
+    selectOne(item) {
+      this.$emit("rankSelectOne", item);
     },
   },
   mounted() {

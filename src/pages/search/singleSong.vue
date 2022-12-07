@@ -1,5 +1,5 @@
 <template>
-  <view :class="['content', { sumContent: isSum }]">
+  <view :class="['content', { sumContent: isSum }]" v-if="songsNum > 0">
     <view class="content_title" v-if="!isSum">
       <view class="content_title_left"> 单曲 </view>
     </view>
@@ -9,6 +9,7 @@
         v-for="(item, index) in songList"
         :key="index"
         v-show="!isSum ? index < 4 : index > -1"
+        @click="selectOneSong(item)"
       >
         <view
           class="content_main_item_songName"
@@ -76,6 +77,11 @@ export default {
       if (res.code == 200) {
         this.songList = res.result.songs;
         this.songsNum = res.result.songCount;
+        if (this.songsNum == 0) {
+          this.$emit("noSongs", true);
+        } else {
+          this.$emit("noSongs", false);
+        }
       }
     },
     match(str) {
@@ -84,6 +90,17 @@ export default {
     getTotal() {
       this.isSum = true;
       this.$emit("getTotal", this.isSum);
+    },
+    //选择一首单曲
+    selectOneSong(i) {
+      this.$store.state.hlAudio.currentMusic = i;
+      this.$store.state.hlAudio.currentIndex++;
+      //在播放器中的播放列表中添加
+      this.$store.state.hlAudio.musicList.splice(
+        this.$store.state.hlAudio.currentIndex,
+        0,
+        this.$store.state.hlAudio.currentMusic
+      );
     },
   },
   mounted() {
@@ -99,7 +116,6 @@ export default {
 }
 .content {
   width: 100%;
-  height: 800rpx;
   background-color: #fff;
   border-radius: 30rpx;
   margin-bottom: 40rpx;

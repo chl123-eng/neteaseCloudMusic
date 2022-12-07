@@ -1,5 +1,5 @@
 <template>
-  <view :class="['content', { sumContent: isSum }]">
+  <view :class="['content', { sumContent: isSum }]" v-if="songMenuNum > 0">
     <view class="content_title" v-if="!isSum">
       <view class="content_title_left"> 歌单</view>
     </view>
@@ -10,26 +10,27 @@
         :key="index"
         v-show="!isSum ? index < 4 : index > -1"
       >
-        {{ !isSum ? index < 4 : index > -1 }}
-        <view class="content_main_item_left">
-          <img :src="item.coverImgUrl" />
-        </view>
-        <view class="content_main_item_right">
-          <view
-            class="content_main_item_right_songName"
-            :class="{ content_main_item_match: match(item.name) }"
-            >{{ item.name }}
+        <view style="display: flex">
+          <view class="content_main_item_left">
+            <img :src="item.coverImgUrl" />
           </view>
-          <view class="content_main_item_right_detail">
-            <view class="content_main_item_right_detail_songNum"
-              >{{ item.trackCount }}首，</view
-            >
-            <view class="content_main_item_right_detail_creator"
-              >by&nbsp;{{ item.creator.nickname }}，</view
-            >
-            <view class="content_main_item_right_detail_creator"
-              >播放{{ (item.playCount / 1000).toFixed(1) }}万次</view
-            >
+          <view class="content_main_item_right">
+            <view
+              class="content_main_item_right_songName"
+              :class="{ content_main_item_match: match(item.name) }"
+              >{{ item.name }}
+            </view>
+            <view class="content_main_item_right_detail">
+              <view class="content_main_item_right_detail_songNum"
+                >{{ item.trackCount }}首，</view
+              >
+              <view class="content_main_item_right_detail_creator"
+                >by&nbsp;{{ item.creator.nickname }}，</view
+              >
+              <view class="content_main_item_right_detail_creator"
+                >播放{{ (item.playCount / 1000).toFixed(1) }}万次</view
+              >
+            </view>
           </view>
         </view>
       </view>
@@ -83,6 +84,11 @@ export default {
       if (res.code == 200) {
         this.songMenuList = res.result.playlists;
         this.songMenuNum = res.result.playlistCount;
+        if (this.songMenuNum == 0) {
+          this.$emit("noSongMenus", true);
+        } else {
+          this.$emit("noSongMenus", false);
+        }
       }
     },
     match(str) {
@@ -106,7 +112,6 @@ export default {
 }
 .content {
   width: 100%;
-  height: 800rpx;
   background-color: #fff;
   border-radius: 30rpx;
   margin-bottom: 40rpx;
@@ -118,7 +123,6 @@ export default {
   }
   &_main {
     &_item {
-      display: flex;
       padding: 30rpx;
       border-bottom: 1px solid rgb(243, 241, 241);
       // &_match {

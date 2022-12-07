@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-11-03 16:09:42
  * @LastEditors: chl123-eng 1326090238@qq.com
- * @LastEditTime: 2022-11-25 12:01:04
+ * @LastEditTime: 2022-12-07 16:53:50
 -->
 <template>
   <view class="content">
@@ -23,16 +23,21 @@
       <view class="content_main_recommendList">
         <recommend-list></recommend-list>
       </view>
+      <view class="content_main_recommendSong">
+        <recommend-songs></recommend-songs>
+      </view>
     </view>
   </view>
 </template>
 <script>
 import mySwiper from "./mySwiper.vue";
 import recommendList from "./recommendList/index.vue";
+import recommendSongs from "./recommendSongs/index.vue";
 export default {
   components: {
     mySwiper,
     recommendList,
+    recommendSongs,
   },
   data() {
     return {
