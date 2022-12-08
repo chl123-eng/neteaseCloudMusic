@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-11-04 15:28:39
  * @LastEditors: chl123-eng 1326090238@qq.com
- * @LastEditTime: 2022-12-07 17:02:41
+ * @LastEditTime: 2022-12-08 13:32:04
  */
 import { fetch } from "@/http/fetch";
 
@@ -24,4 +24,4 @@ export const getSongUrl = (params) =>
   fetch(`/song/url?id=${params}`, {}, "GET");
 //获取推荐歌曲
 export const getRecommendSongs = () =>
-  fetch(`/personalized/newsong`, {}, "GET");
+  fetch(`/personalized/newsong?limit=9`, {}, "GET");

@@ -37,9 +37,9 @@
               <text class="container_musics_music_left_title">{{
                 item.name
               }}</text>
-              <text class="container_musics_music_left_singer"
-                >-{{ item.ar[0].name }}</text
-              >
+              <text class="container_musics_music_left_singer">{{
+                item.ar[0].name ? `-${item.ar[0].name}` : ""
+              }}</text>
             </view>
           </view>
 
@@ -75,10 +75,17 @@ export default {
     "$store.state.hlAudio.musicList"(val) {
       if (val.length > 0) {
         this.musicList = val;
-        this.musicList.forEach((i) => {
-          i.isPlay = false;
-        });
         if (!this.$store.state.hlAudio.currentMusic) {
+          this.musicList.forEach((i) => {
+            i.isPlay = false;
+          });
+        } else {
+          this.musicList.forEach((i) => {
+            i.isPlay = i.id == this.$store.state.hlAudio.currentMusic.id;
+          });
+        }
+
+        if (this.$store.state.recommendList.changeOrderMusicList) {
           this.$store.state.hlAudio.currentMusic = val[0];
           this.$store.state.hlAudio.currentIndex = 0;
         }

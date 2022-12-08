@@ -1,11 +1,13 @@
 <template>
   <view class="audio">
     <view class="audio_img" :class="{ musicPic: isPlay }">
-      <img :src="currentSong.al.picUrl" />
+      <img :src="currentSong.al.picUrl || currentSong.picUrl" />
     </view>
     <view class="audio_mid">
       <text class="audio_mid_name">{{ currentSong.name }}</text>
-      <text class="audio_mid_author">-&nbsp;{{ currentSong.ar[0].name }}</text>
+      <text class="audio_mid_author">{{
+        currentSong.ar[0].name ? `-${currentSong.ar[0].name}` : ""
+      }}</text>
     </view>
     <view class="audio_playBtn" @click="changePlayBtn">
       <hl-icon

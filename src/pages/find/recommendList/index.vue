@@ -43,6 +43,7 @@ export default {
       const res = await this.$api.$homeApi.playList(params);
       this.musicList = res.playlist.tracks;
       this.$store.state.hlAudio.musicList = this.musicList;
+      this.$store.state.recommendList.changeOrderMusicList = true;
     },
   },
   mounted() {

@@ -1,6 +1,7 @@
 const state = {
   musicList: [],
   openMusicList: false,
+  changeOrderMusicList: false,
 };
 
 export default {

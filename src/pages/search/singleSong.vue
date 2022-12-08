@@ -9,7 +9,7 @@
         v-for="(item, index) in songList"
         :key="index"
         v-show="!isSum ? index < 4 : index > -1"
-        @click="selectOneSong(item)"
+        @click="selectSong(item)"
       >
         <view
           class="content_main_item_songName"
@@ -34,6 +34,7 @@
   </view>
 </template>
 <script>
+import { selectOneSong } from "../../utils/changeSong.js";
 export default {
   inject: ["searchStrValue"],
   props: {
@@ -92,15 +93,8 @@ export default {
       this.$emit("getTotal", this.isSum);
     },
     //选择一首单曲
-    selectOneSong(i) {
-      this.$store.state.hlAudio.currentMusic = i;
-      this.$store.state.hlAudio.currentIndex++;
-      //在播放器中的播放列表中添加
-      this.$store.state.hlAudio.musicList.splice(
-        this.$store.state.hlAudio.currentIndex,
-        0,
-        this.$store.state.hlAudio.currentMusic
-      );
+    selectSong(i) {
+      selectOneSong(i);
     },
   },
   mounted() {
