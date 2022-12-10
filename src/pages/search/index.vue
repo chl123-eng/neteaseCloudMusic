@@ -71,9 +71,14 @@ export default {
       this.searchBarStyle = "width: 82%;";
     },
     backTo() {
-      uni.navigateTo({
-        url: "/pages/home/index",
-      });
+      if (this.searchResultVisible) {
+        this.searchResultVisible = false;
+        this.searchHomeVisible = true;
+      } else {
+        uni.navigateTo({
+          url: "/pages/home/index",
+        });
+      }
     },
     search() {
       let param = {

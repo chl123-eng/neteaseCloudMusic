@@ -26,6 +26,9 @@
 		},
 		{
 			"path": "pages/search/index"
+		},
+		{
+			"path": "pages/menuMusicList/index"
 		}
 	],
 	"globalStyle": {

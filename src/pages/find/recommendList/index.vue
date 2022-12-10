@@ -39,11 +39,9 @@ export default {
       }
     },
     async getMusicList(item) {
-      let params = item.id;
-      const res = await this.$api.$homeApi.playList(params);
-      this.musicList = res.playlist.tracks;
-      this.$store.state.hlAudio.musicList = this.musicList;
-      this.$store.state.recommendList.changeOrderMusicList = true;
+      uni.navigateTo({
+        url: "/pages/menuMusicList/index?id=" + item.id,
+      });
     },
   },
   mounted() {
