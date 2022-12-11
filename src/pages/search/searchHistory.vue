@@ -124,7 +124,6 @@ export default {
     },
   },
   mounted() {
-    this.searchBarStyle = "width: 82%;";
     uni
       .createSelectorQuery()
       .in(this)
