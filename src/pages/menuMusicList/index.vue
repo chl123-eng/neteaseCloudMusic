@@ -1,7 +1,7 @@
 <template>
   <view class="content">
     <view class="content_title">
-      <hl-icon icon="icon-fanhuijiantou" color="#fff"></hl-icon>
+      <hl-icon icon="icon-fanhuijiantou" color="#fff" @click="goBack"></hl-icon>
       <view class="content_title_name">歌单</view>
     </view>
     <view
@@ -25,18 +25,49 @@
         <view class="content_profile_right_keyWords"> </view>
       </view>
     </view>
+    <view class="content_musicList">
+      <view class="content_musicList_title"> 播放全部 </view>
+      <view class="content_musicList_list">
+        <view
+          class="content_musicList_list_item"
+          v-for="(item, index) in musicList"
+          :key="index"
+        >
+          <view class="content_musicList_list_item_index"
+            >{{ index + 1 }}
+          </view>
+          <view class="content_musicList_list_item_right">
+            <view class="content_musicList_list_item_right_name">{{
+              item.name
+            }}</view>
+            <view class="content_musicList_list_item_right_singer">
+              <view v-for="(i, index) in item.ar" :key="index">
+                {{ i.name
+                }}<text v-if="index < item.ar.length - 1">/</text></view
+              >
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 <script>
 export default {
   data() {
     return {
-      menuId: "",
+      menuId: "2821115454",
       menuDetails: {},
       musicList: [],
     };
   },
   methods: {
+    //返回
+    goBack() {
+      uni.navigateBack({
+        delta: 1,
+      });
+    },
     //获取歌单详情
     async getMenuDetails() {
       const res = await this.$api.$homeApi.playList(this.menuId);
@@ -50,9 +81,9 @@ export default {
     },
   },
 
-  onLoad(options) {
-    this.menuId = options.id;
-  },
+  // onLoad(options) {
+  //   this.menuId = options.id;
+  // },
   mounted() {
     this.getMenuDetails();
   },
