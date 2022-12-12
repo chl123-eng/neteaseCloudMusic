@@ -28,3 +28,33 @@ export function selectOneSong(i) {
     );
   }
 }
+
+//音乐列表改变
+export function changeMusicList(list) {
+  console.log(11);
+  if (!store.state.hlAudio.currentMusic) {
+    list.forEach((i) => {
+      i.isPlay = false;
+    });
+  } else {
+    list.forEach((i) => {
+      i.isPlay = i.id == store.state.hlAudio.currentMusic.id;
+    });
+  }
+
+  if (store.state.recommendList.changeOrderMusicList) {
+    store.state.hlAudio.currentMusic = list[0];
+    store.state.hlAudio.currentIndex = 0;
+  }
+  store.state.recommendList.musicList = list;
+  return list;
+}
+
+export function changeCurrentMusic(item, list) {
+  console.log(22);
+  list.forEach((i) => {
+    i.isPlay = i.id == item.id;
+  });
+  store.state.recommendList.musicList = list;
+  return list;
+}

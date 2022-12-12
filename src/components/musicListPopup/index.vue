@@ -57,6 +57,7 @@
   </uni-popup>
 </template>
 <script>
+import { changeMusicList, changeCurrentMusic } from "../../utils/changeSong";
 export default {
   data() {
     return {
@@ -75,26 +76,11 @@ export default {
     "$store.state.hlAudio.musicList"(val) {
       if (val.length > 0) {
         this.musicList = val;
-        if (!this.$store.state.hlAudio.currentMusic) {
-          this.musicList.forEach((i) => {
-            i.isPlay = false;
-          });
-        } else {
-          this.musicList.forEach((i) => {
-            i.isPlay = i.id == this.$store.state.hlAudio.currentMusic.id;
-          });
-        }
-
-        if (this.$store.state.recommendList.changeOrderMusicList) {
-          this.$store.state.hlAudio.currentMusic = val[0];
-          this.$store.state.hlAudio.currentIndex = 0;
-        }
+        this.musicList = changeMusicList(this.musicList);
       }
     },
     "$store.state.hlAudio.currentMusic"(val) {
-      this.musicList.forEach((i) => {
-        i.isPlay = i.id == val.id;
-      });
+      this.musicList = changeCurrentMusic(val, this.musicList);
       this.$forceUpdate();
     },
   },
