@@ -35,7 +35,7 @@
   </view>
 </template>
 <script>
-import { selectOneSong } from "../../../utils/changeSong.js";
+import { playAllMusic, selectOneSong } from "../../../utils/changeSong.js";
 export default {
   data() {
     return {
@@ -62,8 +62,8 @@ export default {
       selectOneSong(i);
     },
     play() {
-      this.$store.state.recommendList.changeOrderMusicList = true;
       this.$store.state.hlAudio.musicList = this.resResult;
+      playAllMusic(this.resResult);
     },
   },
   mounted() {

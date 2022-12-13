@@ -77,8 +77,9 @@
 <script>
 import {
   selectOneSong,
-  changeMusicList,
   changeCurrentMusic,
+  changeMusicList,
+  playAllMusic,
 } from "../../utils/changeSong";
 export default {
   data() {
@@ -90,21 +91,10 @@ export default {
     };
   },
   watch: {
-    "$store.state.recommendList.musicList"(val) {
-      if (val.length > 0) {
-        console.log(33);
-        this.musicList = val;
-        this.musicList = changeMusicList(this.musicList);
-        this.$store.state.recommendList.musicList = this.musicList;
-      }
-    },
     "$store.state.hlAudio.currentMusic"(val) {
       this.musicList = changeCurrentMusic(val, this.musicList);
       this.$store.state.recommendList.musicList = this.musicList;
       this.$forceUpdate();
-    },
-    musicList(val) {
-      console.log(val);
     },
   },
   methods: {
@@ -120,15 +110,16 @@ export default {
       if (res.code == 200) {
         this.menuDetails = res.playlist;
         this.musicList = res.playlist.tracks;
-        if (this.$store.state.recommendList.menuId == this.menuId) {
-          this.musicList = this.$store.state.recommendList.musicList;
-        }
+        this.$store.state.recommendList.musicList = this.musicList;
+        this.musicList = changeMusicList(this.musicList);
       }
     },
     playAll() {
       this.$store.state.recommendList.musicList = this.musicList;
-      this.$store.state.recommendList.changeOrderMusicList = true;
-      this.$store.state.recommendList.menuId = this.menuId;
+      this.$store.state.hlAudio.musicList =
+        this.$store.state.recommendList.musicList;
+      this.musicList = changeMusicList(this.musicList);
+      playAllMusic(this.musicList);
     },
     scroll(e) {
       if (e.detail.scrollTop > 50) {

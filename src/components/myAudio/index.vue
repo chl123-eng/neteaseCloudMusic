@@ -48,7 +48,9 @@ export default {
         this.$store.getters["hlAudio/innerAudioContext"];
 
       this.currentSong = this.$store.state.hlAudio.currentMusic;
-      this.getSongInfo(this.$store.state.hlAudio.currentMusic.id);
+      if (!this.$store.state.hlAudio.currentSongUrl) {
+        this.getSongInfo(this.$store.state.hlAudio.currentMusic.id);
+      }
     },
     changePlayBtn() {
       this.isPlay = !this.isPlay;

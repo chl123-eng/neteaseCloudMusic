@@ -9,6 +9,7 @@
         v-for="(item, index) in songMenuList"
         :key="index"
         v-show="!isSum ? index < 4 : index > -1"
+        @click="getMusicList(item)"
       >
         <view style="display: flex">
           <view class="content_main_item_left">
@@ -97,6 +98,11 @@ export default {
     getTotal() {
       this.isSum = true;
       this.$emit("getMenuTotal", this.isSum);
+    },
+    async getMusicList(item) {
+      uni.navigateTo({
+        url: "/pages/menuMusicList/index?id=" + item.id,
+      });
     },
   },
   mounted() {

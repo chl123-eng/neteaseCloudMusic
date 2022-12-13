@@ -12,7 +12,6 @@ export function selectOneSong(i) {
   if (store.state.hlAudio.currentMusic.id != i.id) {
     store.state.hlAudio.currentMusic = i;
   }
-  store.state.recommendList.changeOrderMusicList = false;
   store.state.hlAudio.currentIndex++;
   //在播放器中的播放列表中添加
   store.state.hlAudio.musicList.forEach((item) => {
@@ -29,9 +28,8 @@ export function selectOneSong(i) {
   }
 }
 
-//音乐列表改变
+//音乐列表改变,标红当前播放歌曲
 export function changeMusicList(list) {
-  console.log(11);
   if (!store.state.hlAudio.currentMusic) {
     list.forEach((i) => {
       i.isPlay = false;
@@ -41,20 +39,32 @@ export function changeMusicList(list) {
       i.isPlay = i.id == store.state.hlAudio.currentMusic.id;
     });
   }
-
-  if (store.state.recommendList.changeOrderMusicList) {
-    store.state.hlAudio.currentMusic = list[0];
-    store.state.hlAudio.currentIndex = 0;
-  }
   store.state.recommendList.musicList = list;
   return list;
 }
 
 export function changeCurrentMusic(item, list) {
-  console.log(22);
   list.forEach((i) => {
     i.isPlay = i.id == item.id;
   });
   store.state.recommendList.musicList = list;
   return list;
+}
+
+export function playAllMusic(list) {
+  let flag = false; //当前播放音乐是否在播放音乐列表
+  //如果播放列表中存在当前播放歌曲，则播放全部不默认播放第一条
+  if (store.state.hlAudio.currentMusic) {
+    list.forEach((i) => {
+      if (i.id == store.state.hlAudio.currentMusic.id) {
+        flag = true;
+        return;
+      }
+    });
+  }
+
+  if (!flag) {
+    store.state.hlAudio.currentMusic = list[0];
+    store.state.hlAudio.currentIndex = 0;
+  }
 }
