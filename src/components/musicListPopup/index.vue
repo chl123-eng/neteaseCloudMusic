@@ -71,6 +71,8 @@ export default {
     "$store.state.recommendList.openMusicList"(val) {
       if (val) {
         this.open();
+      } else {
+        this.$refs.popup.close();
       }
     },
     "$store.state.hlAudio.musicList"(val) {
@@ -92,11 +94,7 @@ export default {
       this.$store.state.hlAudio.currentMusic = item;
       this.$store.state.hlAudio.currentIndex = index;
     },
-    changePlaySeq() {
-      this.playSeq++;
-      if (this.playSeq == 4) {
-        this.playSeq = 1;
-      }
+    methodsIconChange() {
       this.playMethods =
         this.playSeq == 1
           ? "列表播放"
@@ -109,6 +107,13 @@ export default {
           : this.playSeq == 2
           ? "icon-danquxunhuan"
           : "icon-suijibofang";
+    },
+    changePlaySeq() {
+      this.playSeq++;
+      if (this.playSeq == 4) {
+        this.playSeq = 1;
+      }
+      this.methodsIconChange();
       this.$store.state.hlAudio.playSeq = this.playSeq;
     },
     //删除
@@ -121,6 +126,9 @@ export default {
   },
   mounted() {
     this.musicList = this.$store.state.hlAudio.musicList;
+    this.playSeq = this.$store.state.hlAudio.playSeq;
+    this.methodsIconChange();
+    this.$store.state.recommendList.openMusicList = false;
   },
 };
 </script>

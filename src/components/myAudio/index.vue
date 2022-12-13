@@ -19,14 +19,20 @@
     <view class="audio_list" @click="clickMusicList">
       <hl-icon icon="icon-yinleliebiao-"></hl-icon>
     </view>
+    <view class="musicPlayPopup">
+      <musicList-popup></musicList-popup>
+    </view>
   </view>
 </template>
 <script>
+import musicListPopup from "@/components/musicListPopup/index.vue";
 export default {
+  components: {
+    musicListPopup,
+  },
   data() {
     return {
       isPlay: false,
-      openMusicList: false,
       currentSongUrl: {},
       currentSong: {},
       currentIndex: 0,
@@ -41,6 +47,9 @@ export default {
     "$store.state.hlAudio.currentIndex"(val) {
       this.currentIndex = val;
     },
+    isPlay(val) {
+      this.$store.state.hlAudio.isPlay = val;
+    },
   },
   methods: {
     InitAudio() {
@@ -48,6 +57,7 @@ export default {
         this.$store.getters["hlAudio/innerAudioContext"];
 
       this.currentSong = this.$store.state.hlAudio.currentMusic;
+      this.isPlay = this.$store.state.hlAudio.isPlay;
       if (!this.$store.state.hlAudio.currentSongUrl) {
         this.getSongInfo(this.$store.state.hlAudio.currentMusic.id);
       }

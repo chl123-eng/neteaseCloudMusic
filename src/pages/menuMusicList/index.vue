@@ -72,9 +72,13 @@
         </view>
       </view></scroll-view
     >
+    <view class="content_audio" v-if="currentMusic">
+      <my-audio></my-audio>
+    </view>
   </view>
 </template>
 <script>
+import myAudio from "@/components/myAudio/index.vue";
 import {
   selectOneSong,
   changeCurrentMusic,
@@ -82,16 +86,21 @@ import {
   playAllMusic,
 } from "../../utils/changeSong";
 export default {
+  components: {
+    myAudio,
+  },
   data() {
     return {
       menuId: "",
       menuDetails: {},
       musicList: [],
       musicListFixed: false,
+      currentMusic: null,
     };
   },
   watch: {
     "$store.state.hlAudio.currentMusic"(val) {
+      this.currentMusic = val;
       this.musicList = changeCurrentMusic(val, this.musicList);
       this.$store.state.recommendList.musicList = this.musicList;
       this.$forceUpdate();
@@ -138,6 +147,7 @@ export default {
   },
   mounted() {
     this.getMenuDetails();
+    this.currentMusic = this.$store.state.hlAudio.currentMusic;
   },
 };
 </script>
@@ -162,6 +172,8 @@ export default {
 }
 .content {
   width: 100vw;
+  height: 100vh;
+  position: relative;
   &_title {
     display: flex;
     align-items: center;
@@ -275,6 +287,12 @@ export default {
         }
       }
     }
+  }
+  &_audio {
+    width: 100%;
+    background-color: #fff;
+    position: absolute;
+    bottom: 0;
   }
 }
 </style>

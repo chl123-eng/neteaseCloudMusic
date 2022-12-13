@@ -5,6 +5,7 @@ const state = {
   playSeq: 1,
   musicList: [],
   currentIndex: 0,
+  isPlay: false,
 };
 
 const getters = {
