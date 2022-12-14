@@ -1,9 +1,13 @@
 <template>
   <view class="audio">
-    <view class="audio_img" :class="{ musicPic: isPlay }">
+    <view
+      class="audio_img"
+      :class="{ musicImgRotate: isPlay, pause: !isPlay }"
+      @click="openMusicDetail"
+    >
       <img :src="currentSong.al.picUrl || currentSong.picUrl" />
     </view>
-    <view class="audio_mid">
+    <view class="audio_mid" @click="openMusicDetail">
       <text class="audio_mid_name">{{ currentSong.name }}</text>
       <text class="audio_mid_author">{{
         currentSong.ar[0].name ? `-${currentSong.ar[0].name}` : ""
@@ -22,13 +26,16 @@
     <view class="musicPlayPopup">
       <musicList-popup></musicList-popup>
     </view>
+    <musicPlayDetails></musicPlayDetails>
   </view>
 </template>
 <script>
 import musicListPopup from "@/components/musicListPopup/index.vue";
+import musicPlayDetails from "@/components/musicPlayDetails/index.vue";
 export default {
   components: {
     musicListPopup,
+    musicPlayDetails,
   },
   data() {
     return {
@@ -120,6 +127,9 @@ export default {
         this.num = 0;
       }
     },
+    openMusicDetail() {
+      this.$store.state.recommendList.openMusicDetail = true;
+    },
   },
   mounted() {
     this.InitAudio();
@@ -137,9 +147,12 @@ export default {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .musicPic {
+  .musicImgRotate {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+.pause {
+  -webkit-animation: none !important;
 }
 .audio {
   width: 100%;
@@ -153,6 +166,10 @@ export default {
     width: 100rpx;
     border-radius: 50rpx;
     overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
   &_mid {
     width: 60%;

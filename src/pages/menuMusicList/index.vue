@@ -254,7 +254,7 @@ export default {
     padding-top: 30rpx;
     padding-left: 30rpx;
     box-sizing: border-box;
-    border-radius: 40rpx;
+    border-radius: 40rpx 40rpx 0 0;
     position: relative;
     background-color: #fff;
     &_title {

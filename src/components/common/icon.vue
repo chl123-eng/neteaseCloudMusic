@@ -16,8 +16,8 @@ export default {
       default: "",
     },
     customClass: {
-      type: String,
-      default: "",
+      type: Object,
+      default: () => {},
     },
     size: {
       type: String,

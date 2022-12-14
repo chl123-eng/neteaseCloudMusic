@@ -130,12 +130,12 @@ export default {
 .content {
   width: 100vw;
   height: 100vh;
-  box-sizing: border-box;
   background-color: rgb(252, 250, 250);
   display: flex;
   flex-direction: column;
   &_searchBox {
     padding: 0 40rpx;
+    box-sizing: border-box;
     width: 100%;
     height: 112rpx;
     display: flex;
