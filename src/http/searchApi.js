@@ -8,3 +8,5 @@ export const hotAlbum = () =>
 //获取搜索匹配的值
 export const searchMultimatch = (params) =>
   fetch(`/cloudsearch`, params, "GET");
+//获取歌词
+export const getLyric = (params) => fetch(`/lyric?id=${params}`, {}, "GET");
