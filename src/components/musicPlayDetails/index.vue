@@ -14,7 +14,7 @@
           >
         </view>
       </view>
-      <view class="container_center">
+      <view class="container_center" @click="lyricShow = !lyricShow">
         <view class="container_center_bgImg" v-if="!lyricShow">
           <img src="../../static/img/cd.png" />
         </view>
@@ -32,15 +32,23 @@
           ></view
         >
       </view>
+      <view class="container_bottom">
+        <slider></slider>
+        <buttons></buttons>
+      </view>
     </view>
   </uni-popup>
 </template>
 
 <script>
 import scrollText from "@/components/common/scrollText";
+import slider from "./slider.vue";
+import buttons from "./buttons.vue";
 export default {
   components: {
     scrollText,
+    slider,
+    buttons,
   },
   watch: {
     "$store.state.recommendList.openMusicDetail"(val) {
@@ -68,8 +76,6 @@ export default {
       const res = await this.$api.$searchApi.getLyric(this.musicId);
       if (res.code == 200) {
         this.lyricOperation(this.lyricStr);
-        // this.lyric = this.lyric.replace(/(\n|\r|\r\n|↵)/g, "<br />");
-
         this.lyricShow = true;
       }
     },
@@ -77,7 +83,6 @@ export default {
     lyricOperation(str) {
       let timeArr = []; //未截取的时间数组
       let timeArr1 = []; //截取后的时间数组
-      let wordsArr = []; //截取的每行歌词
 
       //获取截取后时间数组操作
       timeArr = str.match(/\[.*?\]/g);
@@ -86,14 +91,8 @@ export default {
       });
 
       //获取截取后歌词数组操作
-      console.log(str);
       str = str.replace(/\[.*?\]/g, "");
-      console.log(str);
-      wordsArr = str.match(/(\S*)↵/g);
-      console.log(wordsArr);
-      wordsArr.forEach((item) => {
-        this.lyricArr.push(item.replace(/↵/g, ""));
-      });
+      this.lyricArr = str.split("↵");
     },
   },
   mounted() {
@@ -133,7 +132,7 @@ export default {
           width: 300rpx;
           font-size: 40rpx;
           margin: 0 auto;
-          color: #fff;
+          color: rgb(206, 206, 206);
           text-align: center;
         }
 
@@ -155,8 +154,9 @@ export default {
       align-items: center;
       top: 15%;
       width: 100%;
+      height: 60%;
       &_bgImg {
-        margin-top: 80rpx;
+        margin-top: -200rpx;
         width: 480rpx;
         height: 388rpx;
         img {
@@ -166,7 +166,7 @@ export default {
       }
       &_Img {
         position: absolute;
-        margin-top: 80rpx;
+        margin-top: -200rpx;
         width: 200rpx;
         height: 200rpx;
         margin-left: -100rpx;
@@ -177,9 +177,27 @@ export default {
         }
       }
       &_lyric {
+        height: 100%;
+        overflow: auto;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE10+ */
+        &::-webkit-scrollbar {
+          display: none; /* ChromeSafari */
+        }
+        position: absolute;
         color: rgb(201, 197, 197);
         flex-direction: columns !important;
+        line-height: 60rpx;
+        text-align: center;
       }
+    }
+    &_bottom {
+      position: absolute;
+      width: 100%;
+      height: 300rpx;
+      bottom: 0;
+      padding: 30rpx;
+      box-sizing: border-box;
     }
   }
   .container::before {

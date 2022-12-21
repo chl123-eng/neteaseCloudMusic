@@ -68,6 +68,9 @@ export default {
     };
   },
   watch: {
+    "$store.state.hlAudio.playSeq"(val) {
+      this.methodsIconChange(val);
+    },
     "$store.state.recommendList.openMusicList"(val) {
       if (val) {
         this.open();
@@ -94,17 +97,13 @@ export default {
       this.$store.state.hlAudio.currentMusic = item;
       this.$store.state.hlAudio.currentIndex = index;
     },
-    methodsIconChange() {
+    methodsIconChange(val) {
       this.playMethods =
-        this.playSeq == 1
-          ? "列表播放"
-          : this.playSeq == 2
-          ? "单曲播放"
-          : "随机播放";
+        val == 1 ? "列表播放" : val == 2 ? "单曲播放" : "随机播放";
       this.iconName =
-        this.playSeq == 1
+        val == 1
           ? "icon-liebiaoxunhuan"
-          : this.playSeq == 2
+          : val == 2
           ? "icon-danquxunhuan"
           : "icon-suijibofang";
     },
@@ -113,7 +112,7 @@ export default {
       if (this.playSeq == 4) {
         this.playSeq = 1;
       }
-      this.methodsIconChange();
+      this.methodsIconChange(this.playSeq);
       this.$store.state.hlAudio.playSeq = this.playSeq;
     },
     //删除
