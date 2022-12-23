@@ -6,6 +6,8 @@ const state = {
   musicList: [],
   currentIndex: 0,
   isPlay: false,
+  currentSongAllTime: 0,
+  currentSongPlayTime: 0, //当前播放的时间
 };
 
 const getters = {

@@ -126,7 +126,7 @@ export default {
   mounted() {
     this.musicList = this.$store.state.hlAudio.musicList;
     this.playSeq = this.$store.state.hlAudio.playSeq;
-    this.methodsIconChange();
+    this.methodsIconChange(this.playSeq);
     this.$store.state.recommendList.openMusicList = false;
   },
 };

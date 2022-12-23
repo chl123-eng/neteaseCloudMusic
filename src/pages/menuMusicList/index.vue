@@ -275,6 +275,10 @@ export default {
         &_right {
           &_name {
             font-size: 36rpx;
+            width: 600rpx;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
             &_active {
               color: red;
             }

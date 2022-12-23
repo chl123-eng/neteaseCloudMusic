@@ -57,6 +57,18 @@ export default {
     isPlay(val) {
       this.$store.state.hlAudio.isPlay = val;
     },
+    "$store.state.hlAudio.isPlay"(val) {
+      this.isPlay = val;
+      if (val) {
+        this.$store.state.hlAudio.innerAudioContext.play();
+      } else {
+        this.$store.state.hlAudio.innerAudioContext.pause();
+      }
+    },
+    "$store.state.hlAudio.currentSongPlayTime"(val) {
+      this.$store.state.hlAudio.innerAudioContext.startTime = val / 1000;
+      console.log(this.$store.state.hlAudio.innerAudioContext.startTime);
+    },
   },
   methods: {
     InitAudio() {
@@ -71,11 +83,6 @@ export default {
     },
     changePlayBtn() {
       this.isPlay = !this.isPlay;
-      if (this.isPlay) {
-        this.$store.state.hlAudio.innerAudioContext.play();
-      } else {
-        this.$store.state.hlAudio.innerAudioContext.pause();
-      }
     },
     clickMusicList() {
       this.$store.state.recommendList.openMusicList = true;
@@ -118,6 +125,7 @@ export default {
       if (res.code == 200) {
         this.currentSongUrl = res.data[0].url;
         this.$store.state.hlAudio.currentSongUrl = res.data[0].url;
+        this.$store.state.hlAudio.currentSongAllTime = res.data[0].time;
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
         this.$store.state.hlAudio.innerAudioContext.play();

@@ -12,6 +12,7 @@
           :icon="!isPlay ? 'icon-bofang' : 'icon-zanting'"
           color="#fff"
           size="80rpx"
+          @click="isPlay = !isPlay"
         ></hl-icon>
       </view>
       <view class="container_nextOne">
@@ -47,6 +48,12 @@ export default {
           : val == 2
           ? "icon-danquxunhuan"
           : "icon-suijibofang";
+    },
+    isPlay(val) {
+      this.$store.state.hlAudio.isPlay = val;
+    },
+    "$store.state.hlAudio.isPlay"(val) {
+      this.isPlay = val;
     },
   },
   methods: {
