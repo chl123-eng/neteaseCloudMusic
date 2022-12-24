@@ -1,6 +1,6 @@
 <template>
   <view class="container">
-    <view class="container_currentTime">00:00</view>
+    <view class="container_currentTime">{{ currPlayTime }}</view>
     <slider
       backgroundColor="rgb(201, 197, 197)"
       activeColor="#fff"
@@ -17,6 +17,7 @@ export default {
     return {
       allTime: 0,
       oneOfTime: 0,
+      currPlayTime: "00:00",
     };
   },
   watch: {
@@ -24,31 +25,38 @@ export default {
       //计算等分成一百份，一份时间是多少
       this.oneOfTime = val / 100;
 
-      this.getTimeFormat(val);
+      this.allTime = this.getTimeFormat(val);
+    },
+    "$store.state.hlAudio.currentSongPlayTime"(val) {
+      console.log(val);
+      this.currPlayTime = this.getTimeFormat(val);
     },
   },
   methods: {
     //调整时间格式
     getTimeFormat(timeValue) {
-      let time = "";
-      let timeArr = [];
-      time = (timeValue / 1000 / 60).toFixed(2);
-      timeArr = time.split(".");
-      if (parseInt(timeArr[0]) < 10) {
-        timeArr[0] = "0" + timeArr[0];
+      let minute = 0;
+      let second = 0;
+      minute = parseInt(timeValue / 1000 / 60);
+      second = timeValue.toFixed(2) % (1000 * 60);
+
+      if (minute < 10) {
+        minute = "0" + minute;
       }
-      timeArr[1] = (parseInt(timeArr[1]) * 60) / 100;
-      if (parseInt(timeArr[1]) < 10) {
-        timeArr[1] = timeArr[1] + "0";
+      if (second < 10) {
+        second = "0" + second;
       }
-      this.allTime = timeArr[0] + ":" + timeArr[1].toFixed(0);
+      return minute + ":" + second;
     },
     changeTime(e) {
       this.$store.state.hlAudio.currentSongPlayTime =
         e.detail.value * this.oneOfTime;
-      this.getTimeFormat(this.$store.state.hlAudio.currentSongPlayTime);
+      this.currPlayTime = this.getTimeFormat(
+        this.$store.state.hlAudio.currentSongPlayTime
+      );
     },
   },
+  mounted() {},
 };
 </script>
 <style lang="scss" scoped>

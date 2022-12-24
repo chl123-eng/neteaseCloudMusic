@@ -4,7 +4,7 @@
       <view class="container_playSeq" @click="changePlaySeq">
         <hl-icon :icon="seqIconName" color="rgb(201, 197, 197)"></hl-icon>
       </view>
-      <view class="container_lastOne">
+      <view class="container_lastOne" @click="playLastOne">
         <hl-icon icon="icon-left" color="rgb(201, 197, 197)"></hl-icon>
       </view>
       <view class="container_play">
@@ -15,7 +15,7 @@
           @click="isPlay = !isPlay"
         ></hl-icon>
       </view>
-      <view class="container_nextOne">
+      <view class="container_nextOne" @click="playNextOne">
         <hl-icon icon="icon-right" color="rgb(201, 197, 197)"></hl-icon>
       </view>
       <view class="container_musicList" @click="clickMusicList">
@@ -60,12 +60,43 @@ export default {
     clickMusicList() {
       this.$store.state.recommendList.openMusicList = true;
     },
+    //改变播放顺序方式
     changePlaySeq() {
       this.playSeq++;
       if (this.playSeq == 4) {
         this.playSeq = 1;
       }
       this.$store.state.hlAudio.playSeq = this.playSeq;
+    },
+    //播放上一首
+    playLastOne() {
+      if (this.$store.state.hlAudio.currentIndex == 0) {
+        this.$store.state.hlAudio.currentIndex =
+          this.$store.state.hlAudio.musicList.length - 1;
+      } else {
+        this.$store.state.hlAudio.currentIndex = --this.$store.state.hlAudio
+          .currentIndex;
+      }
+      this.$store.state.hlAudio.currentMusic =
+        this.$store.state.hlAudio.musicList[
+          this.$store.state.hlAudio.currentIndex
+        ];
+    },
+    //播放下一首
+    playNextOne() {
+      if (
+        this.$store.state.hlAudio.currentIndex ==
+        this.$store.state.hlAudio.musicList.length - 1
+      ) {
+        this.$store.state.hlAudio.currentIndex = 0;
+      } else {
+        this.$store.state.hlAudio.currentIndex = ++this.$store.state.hlAudio
+          .currentIndex;
+      }
+      this.$store.state.hlAudio.currentMusic =
+        this.$store.state.hlAudio.musicList[
+          this.$store.state.hlAudio.currentIndex
+        ];
     },
   },
 };

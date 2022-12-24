@@ -44,6 +44,7 @@ export default {
       currentSong: {},
       currentIndex: 0,
       num: 0, //跳转次数
+      timeNum: 0, //监听音乐更新次数
     };
   },
   watch: {
@@ -66,8 +67,7 @@ export default {
       }
     },
     "$store.state.hlAudio.currentSongPlayTime"(val) {
-      this.$store.state.hlAudio.innerAudioContext.startTime = val / 1000;
-      console.log(this.$store.state.hlAudio.innerAudioContext.startTime);
+      this.$store.state.hlAudio.innerAudioContext.seek(val / 1000);
     },
   },
   methods: {
@@ -128,9 +128,20 @@ export default {
         this.$store.state.hlAudio.currentSongAllTime = res.data[0].time;
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
-        this.$store.state.hlAudio.innerAudioContext.play();
+
+        this.$store.state.hlAudio.innerAudioContext.onTimeUpdate(() => {
+          this.timeNum++;
+          if (this.timeNum == 4) {
+            this.$store.state.hlAudio.currentSongPlayTime =
+              (this.$store.state.hlAudio.currentSongPlayTime + 1) * 1000;
+            this.timeNum = 0;
+          }
+        });
+        //选择歌曲立即播放
+        // this.$store.state.hlAudio.innerAudioContext.play();
+        // this.isPlay = true;
         this.AudioContextOnEnded();
-        this.isPlay = true;
+
         this.$forceUpdate();
         this.num = 0;
       }

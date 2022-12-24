@@ -8,6 +8,7 @@ const state = {
   isPlay: false,
   currentSongAllTime: 0,
   currentSongPlayTime: 0, //当前播放的时间
+  timeOut: null, //监听音乐播放的计时器
 };
 
 const getters = {
