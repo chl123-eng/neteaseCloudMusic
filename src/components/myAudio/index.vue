@@ -49,8 +49,10 @@ export default {
   },
   watch: {
     "$store.state.hlAudio.currentMusic"(val) {
+      this.$store.state.hlAudio.currentSongPlayTime = 0;
       this.currentSong = val;
       this.getSongInfo(val.id);
+      this.$store.state.hlAudio.isPlay = false;
     },
     "$store.state.hlAudio.currentIndex"(val) {
       this.currentIndex = val;
@@ -65,9 +67,6 @@ export default {
       } else {
         this.$store.state.hlAudio.innerAudioContext.pause();
       }
-    },
-    "$store.state.hlAudio.currentSongPlayTime"(val) {
-      this.$store.state.hlAudio.innerAudioContext.seek(val / 1000);
     },
   },
   methods: {
@@ -98,10 +97,10 @@ export default {
     },
     //随机播放
     randomSongPlay() {
-      this.currentIndex =
-        this.currentIndex + 1 == this.$store.state.hlAudio.musicList.length
-          ? 0
-          : Math.floor(Math.random() * 20);
+      this.currentIndex = Math.floor(
+        Math.random() * this.$store.state.hlAudio.musicList.length
+      );
+
       this.$store.state.hlAudio.currentMusic =
         this.$store.state.hlAudio.musicList[this.currentIndex];
     },
@@ -128,19 +127,15 @@ export default {
         this.$store.state.hlAudio.currentSongAllTime = res.data[0].time;
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
-
+        this.AudioContextOnEnded();
         this.$store.state.hlAudio.innerAudioContext.onTimeUpdate(() => {
           this.timeNum++;
           if (this.timeNum == 4) {
             this.$store.state.hlAudio.currentSongPlayTime =
-              (this.$store.state.hlAudio.currentSongPlayTime + 1) * 1000;
+              this.$store.state.hlAudio.currentSongPlayTime + 1000;
             this.timeNum = 0;
           }
         });
-        //选择歌曲立即播放
-        // this.$store.state.hlAudio.innerAudioContext.play();
-        // this.isPlay = true;
-        this.AudioContextOnEnded();
 
         this.$forceUpdate();
         this.num = 0;
