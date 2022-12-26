@@ -13,6 +13,7 @@
   </view>
 </template>
 <script>
+import { getTimeFormat } from "../../utils/slider";
 export default {
   data() {
     return {
@@ -26,43 +27,24 @@ export default {
     "$store.state.hlAudio.currentSongAllTime"(val) {
       //计算等分成一百份，一份时间是多少
       this.oneOfTime = val / 100;
-      this.allTime = this.getTimeFormat(val);
+      this.allTime = getTimeFormat(val);
     },
     "$store.state.hlAudio.currentSongPlayTime"(val) {
       //当前播放时间能整出oneOfTime，进度条数值就加一
       this.sliderValue = val / this.oneOfTime;
       if (
-        this.getTimeFormat(val) ==
-          this.getTimeFormat(this.$store.state.hlAudio.currentSongAllTime) ||
+        getTimeFormat(val) ==
+          getTimeFormat(this.$store.state.hlAudio.currentSongAllTime) ||
         val == 0
       ) {
         this.currPlayTime = "00:00";
         this.sliderValue = 0;
         this.$store.state.hlAudio.currentSongPlayTime = 0;
       }
-      this.currPlayTime = this.getTimeFormat(val);
+      this.currPlayTime = getTimeFormat(val);
     },
   },
   methods: {
-    //调整时间格式
-    getTimeFormat(timeValue) {
-      let minute = 0;
-      let second = 0;
-      minute = parseInt(timeValue / 1000 / 60);
-      second = (timeValue % (1000 * 60)) / 1000;
-
-      if (String(second).indexOf(".") > -1) {
-        second = second.toFixed(0);
-      }
-      if (minute < 10) {
-        minute = "0" + minute;
-      }
-      if (second < 10) {
-        second = "0" + second;
-      }
-
-      return minute + ":" + second;
-    },
     changeTime(e) {
       this.$store.state.hlAudio.currentSongPlayTime =
         e.detail.value * this.oneOfTime;
@@ -76,7 +58,7 @@ export default {
         this.$store.state.hlAudio.innerAudioContext.play();
       });
 
-      this.currPlayTime = this.getTimeFormat(
+      this.currPlayTime = getTimeFormat(
         this.$store.state.hlAudio.currentSongPlayTime
       );
     },

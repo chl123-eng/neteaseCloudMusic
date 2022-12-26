@@ -20,12 +20,20 @@
           <img :src="picUrl" />
         </view>
         <view class="container_center_lyric" v-show="lyricShow">
-          <scroll-view scroll-y="true" class="container_center_lyric_scroll">
+          <scroll-view
+            show-scrollbar="true"
+            scroll-y="true"
+            class="container_center_lyric_scroll"
+            :scroll-top="scrollTop"
+            :scroll-with-animation="true"
+          >
             <view
-              class="container_center_lyric_item"
+              class="container_center_lyric_scroll_item"
               v-for="(item, index) in lyricArr"
               :key="index"
-              >{{ item }}</view
+              ><view :class="{ lyricIsPlay: item.isPlay }">{{
+                item.str
+              }}</view></view
             >
           </scroll-view>
           <!-- <view class="container_center_lyric_line"></view> -->
@@ -43,11 +51,28 @@
 import scrollText from "@/components/common/scrollText";
 import slider from "./slider.vue";
 import buttons from "./buttons.vue";
+import { getSeconds } from "@/utils/slider";
 export default {
   components: {
     scrollText,
     slider,
     buttons,
+  },
+
+  data() {
+    return {
+      musicName: "",
+      lyricShow: false,
+      lyricArr: [],
+      singerName: "",
+      picUrl: "",
+      lyric: "",
+      lyricTimeArr: [], //截取后的时间数组
+      timeInterval: [0, 0], //当前播放歌词的时间间隔,
+      lyricIndex: 0, //匹配到的lyric的index
+      scrollTop: 0,
+      scrollViewHeight: 100, //滚动视图的高度
+    };
   },
   watch: {
     "$store.state.recommendList.openMusicDetail"(val) {
@@ -60,24 +85,58 @@ export default {
     "$store.state.hlAudio.currentMusic"(val) {
       this.musicName = val.name;
       this.getSingers();
+      this.getLyric();
     },
-  },
-  data() {
-    return {
-      musicName: "",
-      lyricShow: false,
-      lyricArr: [],
-      singerName: "",
-      picUrl: "",
-      lyric: "",
-    };
+    "$store.state.hlAudio.currentSongPlayTime"(val) {
+      let currentSongPlayTime = (val / 1000).toFixed(0);
+
+      this.lyricTimeArr.forEach((item, index) => {
+        if (getSeconds(item) == currentSongPlayTime) {
+          this.lyricIndex = index;
+          this.timeInterval[0] = currentSongPlayTime;
+          this.timeInterval[1] = getSeconds(this.lyricTimeArr[index + 1]);
+        }
+        if (
+          this.timeInterval[0] <=
+          currentSongPlayTime <
+          this.timeInterval[1]
+        ) {
+          this.lyricArr[this.lyricIndex].isPlay = true;
+        }
+      });
+      this.lyricArr.forEach((item, index) => {
+        if (index != this.lyricIndex) {
+          item.isPlay = false;
+        }
+      });
+    },
+    lyricIndex() {
+      //当前播放的滚动到试视图中央
+      this.scrollToMiddle();
+    },
   },
   methods: {
     closePopup() {
       this.$store.state.recommendList.openMusicDetail = false;
       this.$refs.popup.close();
     },
+    //当前播放歌曲一直高亮在第一行
+    scrollToTop() {
+      this.$nextTick(() => {
+        uni
+          .createSelectorQuery()
+          .in(this)
+          .select(".lyricIsPlay")
+          .boundingClientRect(() => {
+            this.scrollTop = this.lyricIndex * 32;
+          })
+          .exec();
+      });
+    },
     async getLyric() {
+      this.lyricArr = [];
+      this.lyricTimeArr = [];
+      this.scrollTop = 0;
       const res = await this.$api.$searchApi.getLyric(
         this.$store.state.hlAudio.currentMusic.id
       );
@@ -89,17 +148,33 @@ export default {
     //获取每行歌词的时间
     lyricOperation(str) {
       let timeArr = []; //未截取的时间数组
-      let timeArr1 = []; //截取后的时间数组
+      let lyricArr1 = [];
 
       //获取截取后时间数组操作
       timeArr = str.match(/\[.*?\]/g);
       timeArr.forEach((item) => {
-        timeArr1.push(item.substring(1, 6));
+        this.lyricTimeArr.push(item.substring(1, 6));
       });
 
       //获取截取后歌词数组操作
       str = str.replace(/\[.*?\]/g, "");
-      this.lyricArr = str.split("\n");
+      lyricArr1 = str.split("\n");
+
+      //去空
+      lyricArr1.forEach((item, index) => {
+        if (!item) {
+          lyricArr1.splice(index, 1);
+          this.lyricTimeArr.splice(index, 1);
+        }
+      });
+
+      lyricArr1.forEach((item) => {
+        let param = {
+          isPlay: false,
+          str: item,
+        };
+        this.lyricArr.push(param);
+      });
     },
     //获取歌手\背景图片
     getSingers() {
@@ -210,6 +285,11 @@ export default {
         text-align: center;
         &_scroll {
           height: 100%;
+          &_item {
+            .lyricIsPlay {
+              color: #fff !important;
+            }
+          }
         }
         &_line {
           position: absolute;
