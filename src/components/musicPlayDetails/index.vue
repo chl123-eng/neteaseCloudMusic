@@ -26,6 +26,7 @@
             class="container_center_lyric_scroll"
             :scroll-top="scrollTop"
             :scroll-with-animation="true"
+            @scroll="scroll"
           >
             <view
               class="container_center_lyric_scroll_item"
@@ -36,8 +37,12 @@
               }}</view></view
             >
           </scroll-view>
-          <!-- <view class="container_center_lyric_line"></view> -->
         </view>
+      </view>
+      <!-- 播放线 -->
+      <view class="container_playFlag" v-if="lyricShow" @click="selectOnePlay">
+        <view class="container_playFlag_line"></view>
+        <hl-icon icon="icon-icon-bfq-bofang1x1" color="#cdcdcd"></hl-icon>
       </view>
       <view class="container_bottom">
         <slider></slider>
@@ -72,6 +77,8 @@ export default {
       lyricIndex: 0, //匹配到的lyric的index
       scrollTop: 0,
       scrollViewHeight: 100, //滚动视图的高度
+      lyricLineHeight: 0,
+      selectLyricIndex: 0,
     };
   },
   watch: {
@@ -121,7 +128,7 @@ export default {
       this.$refs.popup.close();
     },
     //当前播放歌曲一直高亮在第一行
-    scrollToTop() {
+    scrollToMiddle() {
       this.$nextTick(() => {
         uni
           .createSelectorQuery()
@@ -152,12 +159,15 @@ export default {
 
       //获取截取后时间数组操作
       timeArr = str.match(/\[.*?\]/g);
-      timeArr.forEach((item) => {
-        this.lyricTimeArr.push(item.substring(1, 6));
-      });
+      if (timeArr) {
+        timeArr.forEach((item) => {
+          this.lyricTimeArr.push(item.substring(1, 6));
+        });
 
-      //获取截取后歌词数组操作
-      str = str.replace(/\[.*?\]/g, "");
+        //获取截取后歌词数组操作
+        str = str.replace(/\[.*?\]/g, "");
+      }
+
       lyricArr1 = str.split("\n");
 
       //去空
@@ -193,6 +203,45 @@ export default {
         singerArr.push(item.name);
       });
       this.singerName = singerArr.join("/");
+    },
+    scroll(e) {
+      uni
+        .createSelectorQuery()
+        .in(this)
+        .select(".container_center_lyric_scroll_item")
+        .boundingClientRect((data) => {
+          this.lyricLineHeight = data.height;
+        })
+        .exec();
+      this.lyricArr.forEach((item, index) => {
+        if (
+          this.lyricLineHeight * index <= e.detail.scrollTop &&
+          e.detail.scrollTop <= this.lyricLineHeight * (index + 1)
+        ) {
+          this.selectLyricIndex = index;
+        }
+      });
+    },
+    selectOnePlay() {
+      // this.lyricArr.forEach((item, index) => {
+      //   if (index != this.selectLyricIndex + 1) {
+      //     item.isPlay = false;
+      //   }
+      // });
+      // this.lyricArr[this.selectLyricIndex + 1].isPlay = true;
+      this.$store.state.hlAudio.currentSongPlayTime =
+        getSeconds(this.lyricTimeArr[this.selectLyricIndex + 1]) * 1000;
+      //定位到当前播放的音乐位置
+      this.$store.state.hlAudio.innerAudioContext.seek(
+        this.$store.state.hlAudio.currentSongPlayTime / 1000
+      );
+      this.$store.state.hlAudio.innerAudioContext.onSeeked(() => {
+        if (this.$store.state.hlAudio.isPlay) {
+          //解决重新定位音乐后onTimeUpdate失效问题
+          this.$store.state.hlAudio.innerAudioContext.pause();
+          this.$store.state.hlAudio.innerAudioContext.play();
+        }
+      });
     },
   },
   mounted() {
@@ -291,14 +340,20 @@ export default {
             }
           }
         }
-        &_line {
-          position: absolute;
-          height: 1rpx;
-          width: 100%;
-          background-color: rgb(230, 228, 228);
-          opacity: 0.3;
-          top: 50%;
-        }
+      }
+    }
+    &_playFlag {
+      position: absolute;
+      top: 190rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      &_line {
+        height: 1rpx;
+        width: 80%;
+        background-color: #cdcdcd;
+        opacity: 0.3;
       }
     }
     &_bottom {

@@ -53,9 +53,11 @@ export default {
         this.$store.state.hlAudio.currentSongPlayTime / 1000
       );
       this.$store.state.hlAudio.innerAudioContext.onSeeked(() => {
-        //解决重新定位音乐后onTimeUpdate失效问题
-        this.$store.state.hlAudio.innerAudioContext.pause();
-        this.$store.state.hlAudio.innerAudioContext.play();
+        if (this.$store.state.hlAudio.isPlay) {
+          //解决重新定位音乐后onTimeUpdate失效问题
+          this.$store.state.hlAudio.innerAudioContext.pause();
+          this.$store.state.hlAudio.innerAudioContext.play();
+        }
       });
 
       this.currPlayTime = getTimeFormat(

@@ -24,11 +24,9 @@ export default {
     };
   },
   watch: {
-    num(val) {
-      if (val == 2) {
-        let flag = this.innerWidth > this.outerWidth;
-        this.needToScroll = flag;
-      }
+    num() {
+      let flag = this.innerWidth > this.outerWidth;
+      this.needToScroll = flag;
     },
   },
   mounted() {

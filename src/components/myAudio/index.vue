@@ -128,6 +128,7 @@ export default {
         this.$store.state.hlAudio.innerAudioContext.src =
           this.$store.state.hlAudio.currentSongUrl;
         this.AudioContextOnEnded();
+
         this.$store.state.hlAudio.innerAudioContext.onTimeUpdate(() => {
           this.timeNum++;
           if (this.timeNum == 4) {
