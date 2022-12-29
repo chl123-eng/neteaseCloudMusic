@@ -30,3 +30,9 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+i {
+  display: flex;
+  justify-content: center;
+}
+</style>

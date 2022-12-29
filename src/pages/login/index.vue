@@ -4,7 +4,7 @@
  * @Author: chl
  * @Date: 2022-10-17 14:48:08
  * @LastEditors: chl123-eng 1326090238@qq.com
- * @LastEditTime: 2022-11-07 17:15:12
+ * @LastEditTime: 2022-12-29 13:29:38
 -->
 <template>
   <view class="login">
@@ -132,26 +132,27 @@ export default {
             title: res.msg,
           });
         }
-        if (res.code == 200) {
-          uni.setStorage({
-            key: "account",
-            data: res.account,
-          });
-          uni.setStorage({
-            key: "bindings",
-            data: res.bindings,
-          });
-          uni.setStorage({
-            key: "profile",
-            data: res.profile,
-          });
-          this.SET_ACCOUNT(res.account);
-          this.SET_BINDINGS(res.bindings);
-          this.SET_PROFILE(res.profile);
-          uni.navigateTo({
-            url: "/pages/home/index",
-          });
-        }
+        // if (res.code == 200) {
+        //   uni.setStorage({
+        //     key: "account",
+        //     data: res.account,
+        //   });
+        //   uni.setStorage({
+        //     key: "bindings",
+        //     data: res.bindings,
+        //   });
+        //   uni.setStorage({
+        //     key: "profile",
+        //     data: res.profile,
+        //   });
+        //   this.SET_ACCOUNT(res.account);
+        //   this.SET_BINDINGS(res.bindings);
+        //   this.SET_PROFILE(res.profile);
+        // }
+
+        uni.navigateTo({
+          url: "/pages/home/index",
+        });
       }
     },
     async sendCaptcha() {
@@ -184,6 +185,21 @@ export default {
         const res = await this.$api.$loginApi.register(params);
         if (res.code == 200) {
           this.currentStatus = "login";
+          uni.setStorage({
+            key: "account",
+            data: res.account,
+          });
+          uni.setStorage({
+            key: "bindings",
+            data: res.bindings,
+          });
+          uni.setStorage({
+            key: "profile",
+            data: res.profile,
+          });
+          this.SET_ACCOUNT(res.account);
+          this.SET_BINDINGS(res.bindings);
+          this.SET_PROFILE(res.profile);
         }
       }
     },

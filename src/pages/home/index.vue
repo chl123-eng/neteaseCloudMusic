@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      activeTab: "find",
+      activeTab: "personal",
       currentMusic: null,
     };
   },
